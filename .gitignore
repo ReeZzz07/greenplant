@@ -1,0 +1,161 @@
+# ========================================
+# Laravel Framework
+# ========================================
+/vendor
+/node_modules
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+
+# ========================================
+# Laravel Cache & Build
+# ========================================
+/.phpunit.cache
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitkeep
+
+# ========================================
+# Laravel Logs & Storage
+# ========================================
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/testing/*
+!/storage/framework/testing/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/storage/app/backups/*
+!/storage/app/backups/.gitkeep
+
+# ========================================
+# IDE & Editors
+# ========================================
+/.fleet
+/.idea
+/.vscode
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ========================================
+# OS Files
+# ========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ========================================
+# Documentation & Temporary Files
+# ========================================
+# Временные отчеты и сводки (не для production)
+/ANALYSIS_SUMMARY.md
+/COMPLETED_TODAY.md
+/CRITICAL_TASKS_COMPLETED.md
+/FINAL_REPORT.md
+/FONT_AWESOME_ICONS.md
+/OVERLAY_SETTINGS_COMPLETED.md
+/QUICK_START.md
+/READY.md
+/START_HERE.md
+/TEST_CUSTOMER_ACCOUNTS.md
+/TEST_IT_NOW.md
+/USER_MANAGEMENT_FEATURE.md
+/VERSION_2.0_RELEASE.md
+/ACCOUNT_PAGE_SETTINGS_FEATURE.md
+/CUSTOMER_ACCOUNT_FEATURE.md
+/CREATE_ENV_EXAMPLE.md
+
+# Deployment документация - оставляем для production
+# /PRODUCTION_READY.md
+# /DEPLOYMENT_SUMMARY.md
+# /DEPLOYMENT_CHEATSHEET.md
+# /deploy.sh
+# /.htaccess.root
+# /docs/DEPLOYMENT_*.md
+# /docs/PRODUCTION_*.md
+# /docs/ENV_PRODUCTION_TEMPLATE.md
+
+# ========================================
+# Testing
+# ========================================
+/.phpunit.cache
+/phpunit.xml
+/coverage
+/.phpunit.result.cache
+
+# ========================================
+# Development Tools
+# ========================================
+composer.phar
+.php_cs.cache
+.php-cs-fixer.cache
+
+# ========================================
+# Backups & Database
+# ========================================
+*.sql
+*.sql.gz
+*.sqlite
+*.sqlite-journal
+/database/*.sqlite
+/database/*.sqlite-journal
+*.backup
+
+# ========================================
+# Project Specific
+# ========================================
+# Uploaded files (загруженные изображения уже в Git)
+# /storage/app/public/*
+# !/storage/app/public/.gitkeep
+
+# Generated files
+/public/css
+/public/js
+/public/mix-manifest.json
+
+# Development only
+.env.example.local
+.env.testing
+
+# ========================================
+# Security
+# ========================================
+# Никогда не коммитить:
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa
+id_rsa.pub
+known_hosts
+
+# ========================================
+# Package Managers
+# ========================================
+/node_modules
+/bower_components
+/package-lock.json
+/yarn.lock
+/composer.lock
+

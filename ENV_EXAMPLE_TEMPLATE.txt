@@ -1,0 +1,211 @@
+# ============================================
+# GreenPlant CMS - Environment Configuration
+# ============================================
+# Скопируйте этот файл в .env и настройте переменные
+
+# ============================================
+# ОСНОВНЫЕ НАСТРОЙКИ ПРИЛОЖЕНИЯ
+# ============================================
+
+APP_NAME=GreenPlant
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
+
+# ============================================
+# БАЗА ДАННЫХ
+# ============================================
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=greenplant
+DB_USERNAME=root
+DB_PASSWORD=
+
+# ============================================
+# ЛОГИРОВАНИЕ
+# ============================================
+
+LOG_CHANNEL=stack
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+# ============================================
+# КЭШИРОВАНИЕ
+# ============================================
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+# ============================================
+# MEMCACHED (опционально)
+# ============================================
+
+MEMCACHED_HOST=127.0.0.1
+
+# ============================================
+# REDIS (опционально)
+# ============================================
+
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+# ============================================
+# EMAIL НАСТРОЙКИ
+# ============================================
+
+# Для локальной разработки (Mailpit)
+MAIL_MAILER=smtp
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="info@greenplant.ru"
+MAIL_FROM_NAME="${APP_NAME}"
+
+# Для production (Яндекс Почта)
+# MAIL_MAILER=smtp
+# MAIL_HOST=smtp.yandex.ru
+# MAIL_PORT=465
+# MAIL_USERNAME=info@greenplant.ru
+# MAIL_PASSWORD=ваш_пароль_от_почты
+# MAIL_ENCRYPTION=ssl
+# MAIL_FROM_ADDRESS="info@greenplant.ru"
+# MAIL_FROM_NAME="${APP_NAME}"
+
+# Для production (Mail.ru)
+# MAIL_MAILER=smtp
+# MAIL_HOST=smtp.mail.ru
+# MAIL_PORT=465
+# MAIL_USERNAME=info@greenplant.ru
+# MAIL_PASSWORD=ваш_пароль_от_почты
+# MAIL_ENCRYPTION=ssl
+# MAIL_FROM_ADDRESS="info@greenplant.ru"
+# MAIL_FROM_NAME="${APP_NAME}"
+
+# ============================================
+# AWS S3 (опционально)
+# ============================================
+
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+# ============================================
+# PUSHER (для реального времени, опционально)
+# ============================================
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_HOST=
+PUSHER_PORT=443
+PUSHER_SCHEME=https
+PUSHER_APP_CLUSTER=mt1
+
+# ============================================
+# VITE (для компиляции ассетов)
+# ============================================
+
+VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+VITE_PUSHER_HOST="${PUSHER_HOST}"
+VITE_PUSHER_PORT="${PUSHER_PORT}"
+VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
+VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+# ============================================
+# АНАЛИТИКА И SEO
+# ============================================
+
+# Google Analytics
+GOOGLE_ANALYTICS_ID=
+# Пример: UA-XXXXXXXXX-X или G-XXXXXXXXXX
+
+# Яндекс.Метрика
+YANDEX_METRIKA_ID=
+# Пример: 12345678
+
+# Google Tag Manager
+GOOGLE_TAG_MANAGER_ID=
+# Пример: GTM-XXXXXXX
+
+# ============================================
+# КАРТЫ
+# ============================================
+
+GOOGLE_MAPS_API_KEY=
+YANDEX_MAPS_API_KEY=
+
+# ============================================
+# ПЛАТЕЖНЫЕ СИСТЕМЫ (опционально)
+# ============================================
+
+# ЮKassa (Яндекс.Касса)
+YOOKASSA_SHOP_ID=
+YOOKASSA_SECRET_KEY=
+
+# Сбербанк
+SBERBANK_USERNAME=
+SBERBANK_PASSWORD=
+
+# Tinkoff
+TINKOFF_TERMINAL_KEY=
+TINKOFF_SECRET_KEY=
+
+# ============================================
+# SMS УВЕДОМЛЕНИЯ (опционально)
+# ============================================
+
+# SMS.ru
+SMSRU_API_ID=
+
+# SMSC.ru
+SMSC_LOGIN=
+SMSC_PASSWORD=
+
+# ============================================
+# СОЦИАЛЬНЫЕ СЕТИ (опционально)
+# ============================================
+
+# Для OAuth авторизации
+FACEBOOK_CLIENT_ID=
+FACEBOOK_CLIENT_SECRET=
+FACEBOOK_REDIRECT_URL=
+
+VK_CLIENT_ID=
+VK_CLIENT_SECRET=
+VK_REDIRECT_URL=
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URL=
+
+# ============================================
+# БЭКАПЫ (для Windows/OSPanel)
+# ============================================
+
+DB_DUMP_PATH=C:\OSPanel\modules\database\MySQL-8.0-Win10\bin
+
+# ============================================
+# ПРОЧИЕ НАСТРОЙКИ
+# ============================================
+
+# Часовой пояс (по умолчанию Europe/Moscow)
+APP_TIMEZONE=Europe/Moscow
+
+# Локаль (по умолчанию ru)
+APP_LOCALE=ru
+
+# Режим обслуживания
+MAINTENANCE_MODE=false
+

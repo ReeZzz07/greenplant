@@ -1,0 +1,820 @@
+/* Custom styles for GreenPlant */
+.contact-section h3 {
+    color: #98c954 !important;
+}
+.contact-info a {
+    color: #98c954 !important;
+}
+
+/* ========================================
+   Иконка корзины в меню
+======================================== */
+.cart-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cart-icon, .icon-user {
+    font-size: 20px !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease;
+}
+
+.cart-link:hover .cart-icon, .user-link:hover .user-icon {
+    color: #82ae46;
+}
+
+.cart-count-badge {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #82ae46;
+    color: white !important;
+    border-radius: 50%;
+    font-size: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.cart-link:hover .cart-count-badge {
+    background: #6b9238;
+    transform: scale(1.1);
+}
+
+/* ========================================
+   Активный пункт меню
+======================================== */
+.navbar-nav .nav-item.active .nav-link,
+.navbar-nav .nav-link.active {
+    color: #82ae46 !important;
+    font-weight: 600;
+    position: relative;
+}
+/* 
+.navbar-nav .nav-item.active .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #82ae46;
+} */
+
+.navbar-nav .nav-item.cta.active .nav-link {
+    color: #82ae46 !important;
+}
+
+.navbar-nav .nav-item.cta.active .cart-icon {
+    color: #82ae46 !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #82ae46 !important;
+}
+
+/* ========================================
+   Убираем outline у всех кнопок
+======================================== */
+button,
+.btn,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+a.btn {
+    outline: none !important;
+}
+
+button:focus,
+.btn:focus,
+input[type="button"]:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+a.btn:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+button:active,
+.btn:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+input[type="reset"]:active,
+a.btn:active {
+    outline: none !important;
+}
+.cart-wrap .btn-primary,
+.cart-detail .btn-primary {
+    font-size: 16px;
+    height: 54px;
+    padding: 12px 30px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    box-shadow: 0 4px 8px rgba(152, 201, 84, 0.3);
+}
+
+/* ========================================
+   Иконки социальных сетей
+======================================== */
+.icon-instagram,
+.icon-whatsapp,
+.icon-telegram {
+    transition: all 0.3s ease-in-out;
+}
+.icon-instagram:hover {
+    color: #E1306C;
+}
+
+.icon-whatsapp:hover {
+    color: #2cb742
+}
+
+.icon-telegram:hover {
+    color: #27a7e7
+}
+
+/* ========================================
+   Анимация уведомлений
+======================================== */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.alert {
+    animation: slideInRight 0.3s ease-out;
+}
+
+/* ========================================
+   Кнопка "Оформить заказ"
+======================================== */
+a.btn-primary[href*="checkout"],
+.btn-primary[href*="checkout"],
+button.btn-primary[type="submit"],
+.btn.btn-primary:contains("Оформить заказ"),
+button.btn.btn-primary {
+    background: #82ae46 !important;
+    color: white !important;
+    border: 2px solid #82ae46 !important;
+    padding: 12px 30px !important;
+    border-radius: 30px !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    transition: all 0.3s ease-in-out !important;
+    width: 100% !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    height: 54px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+}
+
+a.btn-primary[href*="checkout"]:hover,
+.btn-primary[href*="checkout"]:hover,
+button.btn-primary[type="submit"]:hover,
+.btn.btn-primary:contains("Оформить заказ"):hover,
+button.btn.btn-primary:hover {
+    background: #6b9238 !important;
+    color: white !important;
+    border-color: #6b9238 !important;
+    box-shadow: 0 4px 8px rgba(107, 146, 56, 0.3) !important;
+}
+
+a.btn-primary[href*="checkout"]:focus,
+.btn-primary[href*="checkout"]:focus,
+button.btn-primary[type="submit"]:focus,
+.btn.btn-primary:contains("Оформить заказ"):focus,
+button.btn.btn-primary:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(130, 174, 70, 0.2) !important;
+}
+
+a.btn-primary[href*="checkout"]:active,
+.btn-primary[href*="checkout"]:active,
+button.btn-primary[type="submit"]:active,
+.btn.btn-primary:contains("Оформить заказ"):active,
+button.btn.btn-primary:active {
+    box-shadow: 0 2px 4px rgba(107, 146, 56, 0.3) !important;
+}
+
+/* ========================================
+   Увеличение изображений в блоге
+======================================== */
+.image-popup {
+    cursor: pointer;
+    display: block;
+    transition: opacity 0.3s ease;
+}
+
+.image-popup:hover {
+    opacity: 0.9;
+}
+
+.image-popup img {
+    transition: transform 0.3s ease;
+}
+
+.image-popup:hover img {
+    transform: scale(1.02);
+}
+
+/* ========================================
+   Карточка товара - фиксированная высота
+======================================== */
+.product {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.product .text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product .text h3 {
+    min-height: 40px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+}
+
+.product .text .pricing {
+    margin-top: auto;
+}
+
+/* ========================================
+   Анимация карточки товара
+======================================== */
+.add-to-cart-btn-container,
+.quantity-selector-container {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-btn-container button,
+.quantity-selector-container button {
+    transition: all 0.3s ease;
+}
+
+.quantity-input {
+    border: 1px solid #82ae46;
+    border-radius: 30px;
+    padding: 7px 0;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #82ae46;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.quantity-input:focus {
+    border-color: #82ae46;
+    box-shadow: 0 0 0 2px rgba(130, 174, 70, 0.2);
+    outline: none;
+}
+
+.confirm-quantity-btn {
+    min-width: 54px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border: 1px solid #82ae46;
+}
+
+/* ========================================
+   Кнопка "В корзину" на странице продукта
+======================================== */
+.product .btn-primary,
+.product button.btn-primary,
+.product a.btn-primary,
+.product-details .btn-primary,
+.product-details button.btn-primary,
+.product-details a.btn-primary {
+    background: #82ae46 !important;
+    color: white !important;
+    border: 2px solid #82ae46 !important;
+    padding: 7px 0 !important;
+    width: 100% !important;
+    border-radius: 30px !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    transition: all 0.3s ease-in-out !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+}
+
+.product .btn-primary:hover,
+.product button.btn-primary:hover,
+.product a.btn-primary:hover,
+.product-details .btn-primary:hover,
+.product-details button.btn-primary:hover,
+.product-details a.btn-primary:hover {
+    background: #6b9238 !important;
+    color: white !important;
+    border-color: #6b9238 !important;
+    box-shadow: 0 4px 8px rgba(107, 146, 56, 0.3) !important;
+}
+
+.product .btn-primary:focus,
+.product button.btn-primary:focus,
+.product a.btn-primary:focus,
+.product-details .btn-primary:focus,
+.product-details button.btn-primary:focus,
+.product-details a.btn-primary:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(130, 174, 70, 0.2) !important;
+}
+
+.product .btn-primary:active,
+.product button.btn-primary:active,
+.product a.btn-primary:active,
+.product-details .btn-primary:active,
+.product-details button.btn-primary:active,
+.product-details a.btn-primary:active {
+    box-shadow: 0 2px 4px rgba(107, 146, 56, 0.3) !important;
+}
+
+.product-details .btn-primary span {
+    color: inherit;
+    transition: color 0.3s ease-in-out;
+}
+
+/* ========================================
+   Кнопка "Очистить корзину"
+======================================== */
+form:has(button[onclick*="Очистить корзину"]) button,
+button[onclick*="Очистить корзину"] {
+    border: 2px solid #dc3545 !important;
+    color: #dc3545 !important;
+    background: transparent !important;
+    padding: 12px 30px !important;
+    border-radius: 30px !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    transition: all 0.3s ease-in-out !important;
+    width: 100% !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    height: 54px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+form:has(button[onclick*="Очистить корзину"]) button:hover,
+button[onclick*="Очистить корзину"]:hover {
+    background: #dc3545 !important;
+    color: white !important;
+    border-color: #dc3545 !important;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+form:has(button[onclick*="Очистить корзину"]) button:focus,
+button[onclick*="Очистить корзину"]:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2) !important;
+}
+
+form:has(button[onclick*="Очистить корзину"]) button:active,
+button[onclick*="Очистить корзину"]:active {
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+/* ========================================
+   Кнопка удаления товара из корзины
+======================================== */
+.product-remove button {
+    color: #dc3545 !important;
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    font-size: 24px !important;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-remove button:hover {
+    color: #c82333 !important;
+    transform: scale(1.2);
+}
+
+.product-remove button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* ========================================
+   Кнопка "В корзину +"
+======================================== */
+.add-to-cart {
+    transition: all 0.3s ease-in-out !important;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    outline: none;
+}
+
+.add-to-cart:hover {
+    background: #82ae46 !important;
+    color: #fff !important;
+    border: none;
+    outline: none;
+}
+
+.add-to-cart:hover span {
+    color: white !important;
+    transition: color 0.3s ease-in-out;
+}
+
+.add-to-cart span {
+    transition: color 0.3s ease-in-out;
+    position: relative;
+    z-index: 1;
+}
+.in-stock {
+    color: #98c954;
+}
+.out-of-stock {
+    color: #ed5c6a;
+}
+
+/* ========================================
+   Слайдер изображений в блоге
+======================================== */
+
+.blog-post-content .image-carousel,
+.ftco-section .image-carousel {
+    margin: 40px 0;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 15px;
+    position: relative;
+}
+
+.image-carousel .owl-carousel .owl-item img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 600px !important;
+    object-fit: contain;
+    border-radius: 10px !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+    margin: 0 auto;
+    display: block !important;
+}
+
+.image-carousel .owl-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.image-carousel .owl-nav button.owl-prev,
+.image-carousel .owl-nav button.owl-next {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #82ae46 !important;
+    color: white !important;
+    border-radius: 50% !important;
+    font-size: 24px !important;
+    line-height: 50px !important;
+    text-align: center;
+    pointer-events: all;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.image-carousel .owl-nav button.owl-prev:hover,
+.image-carousel .owl-nav button.owl-next:hover {
+    background: #6a8f37 !important;
+    transform: scale(1.1);
+}
+
+.image-carousel .owl-nav button.owl-prev {
+    left: -25px;
+}
+
+.image-carousel .owl-nav button.owl-next {
+    right: -25px;
+}
+
+.image-carousel .owl-dots {
+    text-align: center;
+    margin-top: 25px;
+    position: relative;
+    z-index: 10;
+}
+
+.image-carousel .owl-dots .owl-dot {
+    width: 14px !important;
+    height: 14px !important;
+    background: #ddd !important;
+    border-radius: 50% !important;
+    display: inline-block !important;
+    margin: 0 6px !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    outline: none !important;
+}
+
+.image-carousel .owl-dots .owl-dot span {
+    display: none !important;
+}
+
+.image-carousel .owl-dots .owl-dot.active,
+.image-carousel .owl-dots .owl-dot:hover {
+    background: #82ae46 !important;
+    transform: scale(1.3) !important;
+    width: 14px !important;
+    height: 14px !important;
+}
+
+/* Скрываем глобальные dots, если есть */
+.blog-post-content .owl-theme .owl-dots:not(.image-carousel .owl-dots) {
+    display: none !important;
+}
+
+/* Убираем лишние элементы Owl Carousel */
+.image-carousel .owl-carousel .owl-stage-outer {
+    padding: 0 !important;
+}
+
+.image-carousel .owl-carousel {
+    z-index: 1 !important;
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+    .image-carousel .owl-carousel .owl-item img {
+        height: 400px !important;
+    }
+    
+    .image-carousel .owl-nav button.owl-prev {
+        left: 10px;
+    }
+    
+    .image-carousel .owl-nav button.owl-next {
+        right: 10px;
+    }
+}
+
+/* Обычные изображения в контенте */
+.blog-post-content img:not(.carousel-image) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 20px 0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-wrap {
+    width: 100%;
+    position: relative;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.hero-wrap.hero-bread {
+    padding: 3em 0;
+    background-color: #82ae46;
+}
+
+.hero-wrap .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: '';
+    opacity: .3;
+    background: #000000;
+}
+
+.hero-wrap .slider-text {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-wrap .bread {
+    color: #fff;
+    font-weight: 900;
+    font-size: 40px;
+}
+
+.hero-wrap .breadcrumbs {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.hero-wrap .breadcrumbs span {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.hero-wrap .breadcrumbs a {
+    color: #fff;
+}
+
+/* Sidebar improvements */
+.sidebar-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.sidebar-box h2.heading {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    border-bottom: 2px solid #82ae46;
+    padding-bottom: 15px;
+}
+
+.sidebar-box ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.sidebar-box ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar-box ul li a {
+    color: #000;
+    text-decoration: none;
+    display: block;
+    padding: 5px 0;
+}
+
+.sidebar-box ul li a:hover {
+    color: #82ae46;
+    padding-left: 5px;
+    transition: all 0.3s;
+}
+
+/* Product page improvements */
+.prod-img-bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+/* Blog improvements */
+.ftco-degree-bg {
+    background: #f8f9fa;
+}
+
+.block-20 {
+    overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 270px;
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.blog-entry .text {
+    position: relative;
+    border-top: 0;
+    border-radius: 2px;
+}
+
+.blog-entry .text .heading {
+    font-size: 20px;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+.blog-entry .text .heading a {
+    color: #000;
+}
+
+.blog-entry .text .heading a:hover {
+    color: #82ae46;
+}
+
+/* Contact page */
+.contact-section .info {
+    width: 100%;
+}
+
+.contact-section .info p {
+    margin-bottom: 0;
+}
+
+.contact-section .info p span {
+    font-weight: 700;
+    color: #000;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Meta date for blog */
+.meta-date {
+    color: #fff;
+    background: #82ae46;
+}
+
+.meta-date .day {
+    display: block;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.meta-date .mos, 
+.meta-date .yr {
+    display: block;
+    font-size: 14px;
+}
+
+/* Pagination with accent color */
+.pagination .page-link {
+    color: #82ae46;
+    border-color: #dee2e6;
+}
+
+.pagination .page-link:hover {
+    color: #6a8f38;
+    background-color: #f0f5e8;
+    border-color: #82ae46;
+}
+
+.pagination .page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(130, 174, 70, 0.25);
+}
+
+.pagination .page-item.active .page-link {
+    color: #fff;
+    background-color: #82ae46;
+    border-color: #82ae46;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+/* Breadcrumbs with ">" separators */
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.breadcrumbs .mr-2:after {
+    content: ">";
+    margin-left: 8px;
+    color: #82ae46;
+    font-weight: 600;
+}
+
