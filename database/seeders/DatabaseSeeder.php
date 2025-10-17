@@ -20,6 +20,11 @@ class DatabaseSeeder extends Seeder
             HomePageGallerySeeder::class,
             HomePageSectionTitleSeeder::class,
             AddHomePageHeroSettingsSeeder::class,
+            CatalogPageSettingSeeder::class,
+            AboutPageSettingSeeder::class,
+            BlogPageSettingSeeder::class,
+            ContactPageSettingSeeder::class,
+            AccountPageSettingSeeder::class,
         ]);
     }
 }
