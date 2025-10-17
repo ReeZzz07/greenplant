@@ -328,8 +328,8 @@ chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 
 # Убедитесь что owner правильный
-chown -R u1234567:u1234567 storage
-chown -R u1234567:u1234567 bootstrap/cache
+chown -R u3275574:u3275574 storage
+chown -R u3275574:u3275574 bootstrap/cache
 ```
 
 **Через FTP**: установите права 755 или 775 на:
@@ -390,7 +390,7 @@ php artisan optimize
    - **Период**: Каждую минуту (`* * * * *`)
    - **Команда**:
      ```bash
-     cd /var/www/u3275574/data/www/g-plant/laravel && php artisan schedule:run >> /dev/null 2>&1
+     cd /var/www/u3275574/data/www/g-plant/ && php artisan schedule:run >> /dev/null 2>&1
      ```
 3. Сохраните
 
