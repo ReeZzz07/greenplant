@@ -12,6 +12,14 @@ class AddHomePageHeroSettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\HeroSetting::create([
+            'background_image' => null,
+            'background_position' => 'center center',
+            'background_size' => 'cover',
+            'overlay_type' => 'darken',
+            'overlay_opacity' => 40,
+            'background_color' => '#2c5f2d',
+            'is_active' => true,
+        ]);
     }
 }

@@ -15,6 +15,11 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             TestimonialSeeder::class,
             SettingSeeder::class,
+            SliderSeeder::class,
+            HomePageFeatureSeeder::class,
+            HomePageGallerySeeder::class,
+            HomePageSectionTitleSeeder::class,
+            AddHomePageHeroSettingsSeeder::class,
         ]);
     }
 }
