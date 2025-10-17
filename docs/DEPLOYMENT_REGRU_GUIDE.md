@@ -187,10 +187,10 @@ zip -r greenplant.zip . -x "*.git*" "node_modules/*" ".env" "storage/logs/*"
 4. **Настройте символическую ссылку** (через SSH или панель):
    ```bash
    # Удалите старую public_html если есть
-   rm -rf /home/u1234567/domains/ваш-домен.ru/public_html
+   rm -rf /var/u3275574/data/www/g-plant.ru/public_html
    
    # Создайте symlink на Laravel public
-   ln -s /home/u1234567/domains/ваш-домен.ru/laravel/public /home/u1234567/domains/ваш-домен.ru/public_html
+   ln -s /var/u3275574/data/www/g-plant.ru/laravel/public /var/u3275574/data/www/g-plant.ru/public_html
    ```
 
    **Если SSH недоступен**, используйте панель управления файлами REG.RU.
@@ -205,7 +205,7 @@ ssh u1234567@ваш-домен.ru
 cd /home/u1234567/domains/ваш-домен.ru/
 
 # Клонируйте репозиторий
-git clone https://github.com/ваш-репозиторий/greenplant.git laravel
+git clone https://github.com/ReeZzz07/greenplant.git laravel
 
 # Перейдите в папку проекта
 cd laravel
@@ -390,7 +390,7 @@ php artisan optimize
    - **Период**: Каждую минуту (`* * * * *`)
    - **Команда**:
      ```bash
-     cd /home/u1234567/domains/ваш-домен.ru/laravel && php artisan schedule:run >> /dev/null 2>&1
+     cd /var/www/u3275574/data/www/g-plant/laravel && php artisan schedule:run >> /dev/null 2>&1
      ```
 3. Сохраните
 

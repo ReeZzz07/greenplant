@@ -165,21 +165,21 @@ git commit -m "Initial commit: GreenPlant v2.4.0
 
 #### GitHub:
 ```bash
-git remote add origin https://github.com/ваш-username/greenplant.git
+git remote add origin https://github.com/ReeZzz07/greenplant.git
 git branch -M main
 git push -u origin main
 ```
 
 #### GitLab:
 ```bash
-git remote add origin https://gitlab.com/ваш-username/greenplant.git
+git remote add origin https://gitlab.com/ReeZzz07/greenplant.git
 git branch -M main
 git push -u origin main
 ```
 
 #### Bitbucket:
 ```bash
-git remote add origin https://bitbucket.org/ваш-username/greenplant.git
+git remote add origin https://bitbucket.org/ReeZzz07/greenplant.git
 git branch -M main
 git push -u origin main
 ```
