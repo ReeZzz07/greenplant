@@ -14,7 +14,11 @@
    ```bash
    cd ~/ваш-домен.com/public_html
    ```
-3. Запустите скрипт:
+3. Получите последние обновления:
+   ```bash
+   git pull origin main
+   ```
+4. Запустите скрипт:
    ```bash
    bash fix-beget-errors.sh
    ```
@@ -27,7 +31,10 @@
 # 1. Перейдите в папку сайта
 cd ~/ваш-домен.com/public_html
 
-# 2. Очистите кэш
+# 2. Получите последние обновления
+git pull origin main
+
+# 3. Очистите кэш
 php artisan cache:clear && php artisan config:clear && php artisan route:clear && php artisan view:clear
 
 # 3. Выполните миграции (создание таблиц)
