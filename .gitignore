@@ -106,7 +106,6 @@ desktop.ini
 # ========================================
 # Development Tools
 # ========================================
-composer.phar
 .php_cs.cache
 .php-cs-fixer.cache
 
@@ -132,6 +131,7 @@ composer.phar
 /public/css
 /public/js
 /public/mix-manifest.json
+public_html
 
 # Development only
 .env.example.local
