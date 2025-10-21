@@ -1,0 +1,100 @@
+/* Фиксы для мобильных устройств */
+
+/* Акцентный цвет для мобильного меню */
+.navbar-toggler {
+    border-color: #82ae46 !important;
+    padding: 8px 10px;
+}
+
+.navbar-toggler .oi-menu {
+    color: #82ae46 !important;
+    font-size: 24px;
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:hover {
+    border-color: #6a8f38 !important;
+}
+
+.navbar-toggler:focus .oi-menu,
+.navbar-toggler:hover .oi-menu {
+    color: #6a8f38 !important;
+}
+
+/* Акцентный цвет для логотипа на мобильных */
+@media (max-width: 991px) {
+    .navbar-brand {
+        color: #82ae46 !important;
+        font-weight: 700;
+    }
+    
+    .navbar-brand:hover {
+        color: #6a8f38 !important;
+    }
+}
+
+/* Разрешаем вертикальную прокрутку на слайдерах */
+.home-slider,
+.carousel-testimony,
+.owl-carousel {
+    touch-action: pan-y !important;
+    -ms-touch-action: pan-y !important;
+}
+
+/* Разрешаем вертикальную прокрутку на элементах слайдера */
+.owl-stage-outer,
+.owl-stage,
+.owl-item {
+    touch-action: pan-y !important;
+    -ms-touch-action: pan-y !important;
+}
+
+/* Для hero секции с слайдером */
+.hero-wrap .home-slider {
+    touch-action: pan-y !important;
+    -ms-touch-action: pan-y !important;
+}
+
+/* Убираем блокировку прокрутки */
+body.owl-grab {
+    touch-action: pan-y !important;
+}
+
+/* Для мобильных устройств: обеспечиваем возможность прокрутки */
+@media (max-width: 991px) {
+    .home-slider,
+    .carousel-testimony,
+    .owl-carousel {
+        touch-action: pan-y !important;
+        -ms-touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Гарантируем, что body можно прокручивать */
+    body {
+        touch-action: pan-y !important;
+        -ms-touch-action: pan-y !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Hero секция должна быть прокручиваемой */
+    .hero-wrap {
+        touch-action: pan-y !important;
+        -ms-touch-action: pan-y !important;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 575px) {
+    /* Уменьшаем высоту hero-секции на мобильных, чтобы пользователь видел, что есть контент ниже */
+    .hero-wrap .slider-item {
+        min-height: 85vh !important;
+        height: 85vh !important;
+    }
+    
+    .js-fullheight {
+        height: 85vh !important;
+    }
+}
+

@@ -49,6 +49,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/mobile-fixes.css') }}">
 </head>
 <body class="goto-here">
     <!-- Top Bar -->
@@ -79,7 +80,7 @@
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">GreenPlant</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="oi oi-menu"></span> Menu
+                <span class="oi oi-menu"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="ftco-nav">
