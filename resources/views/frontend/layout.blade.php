@@ -53,7 +53,7 @@
 </head>
 <body class="goto-here">
     <!-- Top Bar -->
-    <div class="py-1 bg-black">
+    <div class="py-1 bg-black top-bar-desktop">
         <div class="container">
             <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
                 <div class="col-lg-12 d-block">
@@ -123,6 +123,22 @@
                     @endif
                     {{-- Админы и менеджеры: не показываем иконку, они используют прямой вход /login в админку --}}
                 </ul>
+                
+                <!-- Контактная информация для мобильных устройств -->
+                <div class="mobile-contact-info">
+                    <div class="mobile-contact-item">
+                        <div class="icon"><span class="icon-phone2"></span></div>
+                        <a href="tel:+79889385600">{{ \App\Models\Setting::get('phone', '+7 (495) 123-45-67') }}</a>
+                    </div>
+                    <div class="mobile-contact-item">
+                        <div class="icon"><span class="icon-paper-plane"></span></div>
+                        <span>{{ \App\Models\Setting::get('email', 'info@greenplant.ru') }}</span>
+                    </div>
+                    <div class="mobile-contact-item">
+                        <div class="icon"><span class="icon-truck"></span></div>
+                        <span>{{ \App\Models\Setting::get('delivery_text', 'Доставка по России • Гарантия приживаемости') }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
