@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactMessageMail;
 use App\Models\ContactMessage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -28,7 +31,13 @@ class ContactController extends Controller
 
         $validated['ip_address'] = $request->ip();
 
-        ContactMessage::create($validated);
+        $messageModel = ContactMessage::create($validated);
+
+        try {
+            Mail::to('info@g-plant.ru')->send(new ContactMessageMail($messageModel));
+        } catch (\Throwable $e) {
+            Log::error('Не удалось отправить письмо из контактной формы: ' . $e->getMessage());
+        }
 
         return redirect()->route('contact')
             ->with('success', 'Спасибо! Ваше сообщение отправлено. Мы свяжемся с вами в ближайшее время.');

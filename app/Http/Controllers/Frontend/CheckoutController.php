@@ -122,7 +122,11 @@ class CheckoutController extends Controller
                 Notification::route('mail', $order->customer_email)
                     ->notify(new OrderConfirmationNotification($order));
                 
-                // Уведомление администраторам
+                // Уведомление отделу обработки заказов
+                Notification::route('mail', 'orders@g-plant.ru')
+                    ->notify(new NewOrderNotification($order));
+
+                // Уведомление администраторам (для истории в админке)
                 $admins = User::role('admin')->get();
                 Notification::send($admins, new NewOrderNotification($order));
             } catch (\Exception $e) {
