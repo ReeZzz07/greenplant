@@ -189,12 +189,12 @@
                         <h2 class="ftco-heading-2">Помощь</h2>
                         <div class="d-flex">
                             <ul class="list-unstyled mr-l-5 pr-l-3 mr-4">
-                                <li><a href="#" class="py-2 d-block">Доставка</a></li>
-                                <li><a href="#" class="py-2 d-block">Оплата</a></li>
-                                <li><a href="#" class="py-2 d-block">Гарантии</a></li>
+                                <li><a href="{{ route('info', ['tab' => 'delivery']) }}" class="py-2 d-block">Доставка</a></li>
+                                <li><a href="{{ route('info', ['tab' => 'payment']) }}" class="py-2 d-block">Оплата</a></li>
+                                <li><a href="{{ route('info', ['tab' => 'warranty']) }}" class="py-2 d-block">Гарантии</a></li>
                             </ul>
                             <ul class="list-unstyled">
-                                <li><a href="#" class="py-2 d-block">Частые вопросы</a></li>
+                                <li><a href="{{ route('info', ['tab' => 'faq']) }}" class="py-2 d-block">Частые вопросы</a></li>
                                 <li><a href="{{ route('contact') }}" class="py-2 d-block">Связаться с нами</a></li>
                             </ul>
                         </div>
@@ -215,7 +215,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> GreenPlant. Все права защищены.</p>
+                    <p>Copyright &copy;{{ now()->year }} GreenPlant. Все права защищены.</p>
                 </div>
             </div>
         </div>
@@ -225,7 +225,6 @@
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery-migrate-3.0.1.min.js') }}"></script>
     <script src="{{ asset('assets/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.easing.1.3.js') }}"></script>
@@ -233,7 +232,31 @@
     <script src="{{ asset('assets/js/jquery.stellar.min.js') }}"></script>
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
+    <script>
+        (function () {
+            if (!('MutationObserver' in window)) {
+                return;
+            }
+            var originalAddEventListener = Document.prototype.addEventListener;
+            var blockedDomNodeRemoved = false;
+            Document.prototype.addEventListener = function (type, listener, options) {
+                if (type === 'DOMNodeRemoved') {
+                    blockedDomNodeRemoved = true;
+                    return;
+                }
+                return originalAddEventListener.call(this, type, listener, options);
+            };
+            window.addEventListener('load', function () {
+                Document.prototype.addEventListener = originalAddEventListener;
+            }, { once: true });
+        })();
+    </script>
     <script src="{{ asset('assets/js/aos.js') }}"></script>
+    <script>
+        if (window.__restoreDocumentAddEvent) {
+            window.__restoreDocumentAddEvent();
+        }
+    </script>
     <script src="{{ asset('assets/js/jquery.animateNumber.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('assets/js/scrollax.min.js') }}"></script>

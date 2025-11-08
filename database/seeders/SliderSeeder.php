@@ -23,6 +23,8 @@ class SliderSeeder extends Seeder
                 'image' => null,
                 'order' => 1,
                 'is_active' => true,
+                'image_position_x' => 50,
+                'image_position_y' => 50,
             ],
             [
                 'title' => 'Качественные растения',
@@ -33,6 +35,8 @@ class SliderSeeder extends Seeder
                 'image' => null,
                 'order' => 2,
                 'is_active' => true,
+                'image_position_x' => 50,
+                'image_position_y' => 50,
             ],
         ];
 

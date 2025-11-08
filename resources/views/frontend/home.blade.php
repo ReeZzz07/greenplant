@@ -66,7 +66,17 @@
                     <div class="container-fluid p-0">
                         <div class="row d-md-flex no-gutters slider-text align-items-center justify-content-end" data-scrollax-parent="true">
                             @if($slider->image)
-                                <img class="one-third order-md-last img-fluid" src="{{ asset('storage/' . $slider->image) }}" alt="{{ $slider->title }}" style="@if($slider->image_width) width: {{ $slider->image_width }}px; @endif @if($slider->image_height) height: {{ $slider->image_height }}px; object-fit: cover; @endif">
+                                <img
+                                    class="one-third order-md-last img-fluid"
+                                    src="{{ asset('storage/' . $slider->image) }}"
+                                    alt="{{ $slider->title }}"
+                                    style="
+                                        @if($slider->image_width)width: {{ $slider->image_width }}px;@endif
+                                        @if($slider->image_height)height: {{ $slider->image_height }}px;@endif
+                                        object-fit: cover;
+                                        object-position: {{ $slider->image_position_x ?? 50 }}% {{ $slider->image_position_y ?? 50 }}%;
+                                    "
+                                >
                             @endif
                             <div class="one-forth d-flex align-items-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
                                 <div class="text">

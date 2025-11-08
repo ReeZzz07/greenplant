@@ -20,6 +20,8 @@ class Slider extends Model
         'image_height',
         'order',
         'is_active',
+        'image_position_x',
+        'image_position_y',
     ];
 
     protected $casts = [
@@ -27,6 +29,8 @@ class Slider extends Model
         'order' => 'integer',
         'image_width' => 'integer',
         'image_height' => 'integer',
+        'image_position_x' => 'float',
+        'image_position_y' => 'float',
     ];
 
     public function getImageUrlAttribute()

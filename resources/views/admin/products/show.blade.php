@@ -14,6 +14,10 @@
         .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
         .card { background: white; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 40px; margin-bottom: 20px; }
         .product-image { max-width: 400px; border-radius: 15px; margin-bottom: 30px; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 20px 0; }
+        .gallery-card { border-radius: 12px; overflow: hidden; border: 2px dashed #dfe3f6; background: #f6f8ff; padding: 10px; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+        .gallery-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; }
+        .gallery-card span { font-size: 12px; color: #555; text-align: center; word-break: break-word; }
         .info-row { display: grid; grid-template-columns: 200px 1fr; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e9ecef; }
         .info-label { font-weight: 600; color: #666; }
         .info-value { color: #333; }
@@ -44,8 +48,22 @@
         <div class="card">
             <h2>{{ $product->name }}</h2>
 
-            @if($product->image)
-                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="product-image">
+            @if($product->first_image)
+                <img src="{{ asset('storage/' . $product->first_image) }}" alt="{{ $product->name }}" class="product-image">
+            @endif
+
+            @if(!empty($product->images))
+                <div>
+                    <h3 style="margin-bottom: 10px;">Галерея</h3>
+                    <div class="gallery-grid">
+                        @foreach($product->images as $path)
+                            <div class="gallery-card">
+                                <img src="{{ asset('storage/' . $path) }}" alt="Изображение товара">
+                                <span>{{ basename($path) }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             @endif
 
             <div class="info-row">

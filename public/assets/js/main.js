@@ -29,14 +29,21 @@
 	};
 
 
-	$(window).stellar({
-    responsive: true,
-    parallaxBackgrounds: true,
-    parallaxElements: true,
-    horizontalScrolling: false,
-    hideDistantElements: false,
-    scrollProperty: 'scroll'
-  });
+	var shouldInitParallax = document.body && document.body.dataset.enableParallax === 'true';
+	if (shouldInitParallax && $.fn.stellar) {
+		try {
+			$(window).stellar({
+	    responsive: true,
+	    parallaxBackgrounds: true,
+	    parallaxElements: true,
+	    horizontalScrolling: false,
+	    hideDistantElements: false,
+	    scrollProperty: 'scroll'
+	  });
+		} catch (error) {
+			// Suppress parallax errors when underlying DOM structure is incompatible.
+		}
+	}
 
 
 	var fullHeight = function() {

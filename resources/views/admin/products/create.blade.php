@@ -33,6 +33,11 @@
         .error { color: #dc3545; font-size: 13px; margin-top: 5px; }
         .help-text { font-size: 13px; color: #666; margin-top: 5px; }
         h2 { margin-bottom: 30px; color: #333; }
+        .gallery-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 15px; }
+        .gallery-preview-item { position: relative; border-radius: 10px; overflow: hidden; border: 2px dashed #dfe3f6; background: #f6f8ff; display: flex; align-items: center; justify-content: center; padding: 10px; min-height: 140px; }
+        .gallery-preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+        .gallery-preview-placeholder { color: #667eea; font-size: 13px; text-align: center; }
+        .gallery-preview-item span { display: block; font-size: 12px; color: #555; margin-top: 8px; text-align: center; word-break: break-word; }
     </style>
 </head>
 <body>
@@ -123,6 +128,17 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="gallery_images">Дополнительные изображения</label>
+                    <input type="file" id="gallery_images" name="gallery_images[]" accept="image/*" multiple>
+                    @error('gallery_images')<div class="error">{{ $message }}</div>@enderror
+                    @error('gallery_images.*')<div class="error">{{ $message }}</div>@enderror
+                    <div class="help-text">Можно загрузить до 10 изображений по 5 МБ каждое. Первое из них будет использовано как главное, если отдельное главное изображение не выбрано.</div>
+                    <div class="gallery-preview-grid" data-role="gallery-preview">
+                        <div class="gallery-preview-item gallery-preview-placeholder">Пока ничего не выбрано. После выбора файлов здесь появится предпросмотр.</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <div class="checkbox-group">
                         <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
                         <label for="is_active" style="margin: 0;">Товар активен (виден на сайте)</label>
@@ -143,6 +159,62 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const galleryInput = document.getElementById('gallery_images');
+            const previewGrid = document.querySelector('[data-role="gallery-preview"]');
+
+            if (!galleryInput || !previewGrid) {
+                return;
+            }
+
+            const renderPlaceholder = () => {
+                previewGrid.innerHTML = '<div class="gallery-preview-item gallery-preview-placeholder">Пока ничего не выбрано. После выбора файлов здесь появится предпросмотр.</div>';
+            };
+
+            const clearPreview = () => {
+                previewGrid.innerHTML = '';
+            };
+
+            galleryInput.addEventListener('change', function (event) {
+                const files = Array.from(event.target.files || []);
+                clearPreview();
+
+                if (!files.length) {
+                    renderPlaceholder();
+                    return;
+                }
+
+                files.forEach((file) => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-preview-item';
+
+                    const caption = document.createElement('span');
+                    caption.textContent = file.name;
+
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (loadEvent) => {
+                            const img = document.createElement('img');
+                            img.src = loadEvent.target.result;
+                            img.alt = file.name;
+                            item.appendChild(img);
+                            item.appendChild(caption);
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        item.innerHTML = '<span>Файл не является изображением</span>';
+                        item.appendChild(caption);
+                    }
+
+                    previewGrid.appendChild(item);
+                });
+            });
+
+            renderPlaceholder();
+        });
+    </script>
 </body>
 </html>
 

@@ -3,11 +3,7 @@
 <div class="col-sm-12 col-md-6 col-lg-4 ftco-animate d-flex">
     <div class="product d-flex flex-column">
         <a href="{{ route('product', $product->slug) }}" class="img-prod">
-            @if($product->image)
-                <img class="img-fluid" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
-            @else
-                <img class="img-fluid" src="{{ asset('assets/images/product-1.png') }}" alt="{{ $product->name }}">
-            @endif
+            <img class="img-fluid" src="{{ $product->first_image_url }}" alt="{{ $product->name }}">
             @if($product->discount_percent > 0)
                 <span class="status">-{{ $product->discount_percent }}%</span>
             @elseif($product->is_featured)

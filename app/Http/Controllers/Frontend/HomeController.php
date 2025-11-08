@@ -166,5 +166,86 @@ $q->where('slug', $request->category);
 
         return view('frontend.contact', compact('phone', 'email', 'address', 'contactSettings'));
     }
+
+    /**
+     * Страница информации (оплата, доставка, гарантии, FAQ)
+     */
+    public function info(Request $request)
+    {
+        $defaults = [
+            'payment' => '<p>Мы принимаем оплату наличными, банковскими картами и безналичным переводом. После подтверждения заказа менеджер уточнит удобный для вас способ и оформит счёт.</p><ul class="list-unstyled info-list"><li>Оплата при получении или предоплата 100%.</li><li>Поддерживаем СБП и электронные кошельки.</li><li>Для юридических лиц предоставляем полный пакет закрывающих документов.</li></ul>',
+            'delivery' => '<p>Доставляем растения по Москве, области и в другие регионы России. Бережно упаковываем растения и контролируем температурный режим.</p><ul class="list-unstyled info-list"><li>Курьерская доставка по Москве и МО — от 1 до 3 дней.</li><li>Доставка ТК по России — от 3 до 7 дней в стандартном режиме.</li><li>Возможен самовывоз из питомника по предварительной договорённости.</li></ul>',
+            'warranty' => '<p>Мы выращиваем растения в собственном питомнике и отбираем только здоровые экземпляры. На каждую покупку действует гарантия приживаемости при соблюдении рекомендаций.</p><ul class="list-unstyled info-list"><li>Перед отправкой проводим двойной осмотр растений.</li><li>Предоставляем памятку по посадке и уходу.</li><li>Помогаем с заменой в случае выявленных дефектов при получении.</li></ul>',
+        ];
+
+        $faqDefault = [
+            ['question' => 'Как выбрать сорт туи?', 'answer' => '<p>Выбор зависит от желаемой высоты и формы посадки. Наши менеджеры помогут подобрать идеальный сорт под ваш участок.</p>'],
+            ['question' => 'Когда высаживать растения?', 'answer' => '<p>Лучшее время для посадки — весна и начало осени, когда нет сильных температурных перепадов.</p>'],
+            ['question' => 'Как ухаживать после посадки?', 'answer' => '<p>Регулярно поливайте, мульчируйте почву и используйте удобрения для хвойных культур.</p>'],
+        ];
+
+        $faqJson = Setting::get('info_faq_json', json_encode($faqDefault, JSON_UNESCAPED_UNICODE));
+        try {
+            $faqItems = json_decode($faqJson, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            $faqItems = $faqDefault;
+        }
+
+        if (!is_array($faqItems) || empty($faqItems)) {
+            $faqItems = $faqDefault;
+        }
+
+        $tabs = [
+            'payment' => [
+                'title' => 'Оплата',
+                'content' => Setting::get('info_payment_content', $defaults['payment'])
+            ],
+            'delivery' => [
+                'title' => 'Доставка',
+                'content' => Setting::get('info_delivery_content', $defaults['delivery'])
+            ],
+            'warranty' => [
+                'title' => 'Гарантии',
+                'content' => Setting::get('info_warranty_content', $defaults['warranty'])
+            ],
+            'faq' => [
+                'title' => 'Частые вопросы',
+                'faq_items' => $faqItems,
+            ],
+        ];
+
+        $activeTab = $request->get('tab', 'delivery');
+        if (!array_key_exists($activeTab, $tabs)) {
+            $activeTab = 'delivery';
+        }
+
+        $heroTitle = Setting::get('info_page_title', 'Полезная информация');
+        $heroSubtitle = Setting::get('info_page_subtitle', 'Оплата, доставка, гарантии и ответы на частые вопросы');
+        $backgroundPath = Setting::get('info_page_background');
+        $backgroundSize = Setting::get('info_page_background_size', 'cover');
+        $backgroundPosition = Setting::get('info_page_background_position', 'center center');
+        $overlayType = Setting::get('info_page_overlay', 'none');
+        $overlayOpacity = Setting::get('info_page_overlay_opacity', '40');
+        $contentTitle = Setting::get('info_content_title', 'Всё, что нужно знать перед покупкой');
+        $contentSubtitle = Setting::get('info_content_subtitle', 'Мы собрали ключевую информацию об оплате, доставке, гарантиях и заботе о растениях');
+
+        $heroBackground = $backgroundPath
+            ? asset('storage/' . $backgroundPath)
+            : asset('assets/images/bg_6.jpg');
+
+        return view('frontend.info', [
+            'tabs' => $tabs,
+            'activeTab' => $activeTab,
+            'heroTitle' => $heroTitle,
+            'heroSubtitle' => $heroSubtitle,
+            'heroBackground' => $heroBackground,
+            'heroBackgroundSize' => $backgroundSize,
+            'heroBackgroundPosition' => $backgroundPosition,
+            'heroOverlayType' => $overlayType,
+            'heroOverlayOpacity' => $overlayOpacity,
+            'contentTitle' => $contentTitle,
+            'contentSubtitle' => $contentSubtitle,
+        ]);
+    }
 }
 

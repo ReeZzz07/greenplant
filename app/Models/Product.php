@@ -42,6 +42,22 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function getFirstImageAttribute(): ?string
+    {
+        if (!empty($this->attributes['image'])) {
+            return $this->attributes['image'];
+        }
+
+        $images = $this->images ?? [];
+        return $images[0] ?? null;
+    }
+
+    public function getFirstImageUrlAttribute(): string
+    {
+        $path = $this->first_image;
+        return $path ? asset('storage/' . $path) : asset('assets/images/product-1.png');
+    }
+
     public function getDiscountPercentAttribute()
     {
         if ($this->old_price && $this->old_price > $this->price) {

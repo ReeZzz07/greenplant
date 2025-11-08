@@ -77,7 +77,7 @@
                                 <td>{{ $slider->id }}</td>
                                 <td>
                                     @if($slider->image)
-                                        <img src="{{ asset('storage/' . $slider->image) }}" alt="" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                        <img src="{{ asset('storage/' . $slider->image) }}" alt="" style="width: 100px; height: 60px; object-fit: cover; object-position: {{ $slider->image_position_x ?? 50 }}% {{ $slider->image_position_y ?? 50 }}%; border-radius: 8px;">
                                     @else
                                         <span style="color: #999;">Нет изображения</span>
                                     @endif

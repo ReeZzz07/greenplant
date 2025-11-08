@@ -41,6 +41,7 @@ Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [HomeController::class, 'blogPost'])->name('blog.post');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/info', [HomeController::class, 'info'])->name('info');
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,1') // Защита от спама: 5 попыток в минуту
     ->name('contact.send');
@@ -175,6 +176,10 @@ Route::prefix('admin')
         Route::delete('contact-messages/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('contact-messages.destroy');
         Route::post('contact-messages/{contactMessage}/toggle-read', [ContactMessageController::class, 'toggleRead'])->name('contact-messages.toggle-read');
         
+        // Info page settings
+        Route::get('info-page-settings', [\App\Http\Controllers\Admin\InfoPageSettingController::class, 'edit'])->name('info-page-settings.edit');
+        Route::post('info-page-settings', [\App\Http\Controllers\Admin\InfoPageSettingController::class, 'update'])->name('info-page-settings.update');
+
         // Orders
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
         Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');

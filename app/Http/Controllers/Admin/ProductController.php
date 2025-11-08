@@ -46,6 +46,8 @@ class ProductController extends Controller
             'old_price' => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|max:2048',
+            'gallery_images' => 'nullable|array|max:10',
+            'gallery_images.*' => 'image|max:5120',
             'stock' => 'nullable|integer|min:0',
             'sku' => 'nullable|string|unique:products,sku',
             'is_active' => 'boolean',
@@ -61,6 +63,24 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
+
+        $galleryImages = [];
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $file) {
+                if ($file) {
+                    $galleryImages[] = $file->store('products/gallery', 'public');
+                }
+            }
+        }
+
+        if (!empty($galleryImages)) {
+            $validated['images'] = $galleryImages;
+            if (empty($validated['image'])) {
+                $validated['image'] = $galleryImages[0];
+            }
+        }
+
+        unset($validated['gallery_images']);
 
         Product::create($validated);
 
@@ -99,6 +119,10 @@ class ProductController extends Controller
             'old_price' => 'nullable|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|max:2048',
+            'gallery_images' => 'nullable|array|max:10',
+            'gallery_images.*' => 'image|max:5120',
+            'remove_images' => 'nullable|array',
+            'remove_images.*' => 'string',
             'stock' => 'nullable|integer|min:0',
             'sku' => 'nullable|string|unique:products,sku,' . $product->id,
             'is_active' => 'boolean',
@@ -119,6 +143,51 @@ class ProductController extends Controller
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
 
+        $existingImages = collect($product->images ?? []);
+
+        $removeImages = collect($request->input('remove_images', []));
+        if ($removeImages->isNotEmpty()) {
+            $existingImages = $existingImages->reject(function ($path) use ($removeImages, $product) {
+                if ($removeImages->contains($path)) {
+                    Storage::disk('public')->delete($path);
+                    return true;
+                }
+                return false;
+            })->values();
+
+            if ($product->image && $removeImages->contains($product->image)) {
+                Storage::disk('public')->delete($product->image);
+                $validated['image'] = null;
+            }
+        }
+
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $file) {
+                if ($file) {
+                    $existingImages->push($file->store('products/gallery', 'public'));
+                }
+            }
+        }
+
+        if ($existingImages->isNotEmpty()) {
+            $validated['images'] = $existingImages->unique()->values()->all();
+            if (empty($validated['image'])) {
+                $validated['image'] = $product->image ?? $existingImages->first();
+            }
+        } else {
+            $validated['images'] = null;
+            if (empty($validated['image']) && $product->image && (!isset($validated['image']) || $validated['image'] === null) && !$request->hasFile('image')) {
+                $validated['image'] = $product->image;
+            }
+        }
+
+        // Если после удаления галереи и основного изображения ничего не осталось, очистим поле image
+        if (array_key_exists('image', $validated) && !$validated['image']) {
+            $validated['image'] = $existingImages->first() ?? null;
+        }
+
+        unset($validated['gallery_images'], $validated['remove_images']);
+
         $product->update($validated);
 
         return redirect()->route('admin.products.index')
@@ -133,6 +202,12 @@ class ProductController extends Controller
         // Удаление изображения
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
+        }
+
+        if ($product->images) {
+            foreach ($product->images as $path) {
+                Storage::disk('public')->delete($path);
+            }
         }
 
         $product->delete();
