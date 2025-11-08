@@ -1,32 +1,51 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>@yield('title', 'GreenPlant - Продажа саженцев и деревьев туи')</title>
+    @php
+        $siteName = \App\Models\Setting::get('site_name', 'GreenPlant');
+        $siteDescription = \App\Models\Setting::get('site_description', 'GreenPlant - питомник растений. Продажа саженцев и взрослых деревьев туи различных сортов. Гарантия приживаемости, доставка по России.');
+        $siteKeywords = \App\Models\Setting::get('site_keywords', 'туя, саженцы туи, купить тую, туя западная, живая изгородь, питомник растений, GreenPlant');
+        $siteAuthor = \App\Models\Setting::get('site_author', 'GreenPlant');
+        $siteFavicon = \App\Models\Setting::get('site_favicon');
+        $siteLogo = \App\Models\Setting::get('site_logo');
+        $faviconUrl = $siteFavicon ? asset('storage/' . $siteFavicon) : asset('assets/images/prod-1.png');
+        $faviconExt = $siteFavicon ? strtolower(pathinfo($siteFavicon, PATHINFO_EXTENSION)) : 'png';
+        $faviconTypeMap = [
+            'svg' => 'image/svg+xml',
+            'ico' => 'image/x-icon',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+        ];
+        $faviconType = $faviconTypeMap[$faviconExt] ?? 'image/png';
+        $logoUrl = $siteLogo ? asset('storage/' . $siteLogo) : null;
+    @endphp
+    <title>@yield('title', $siteName . ' - Продажа саженцев и деревьев туи')</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/png" href="{{ asset('assets/images/prod-1.png') }}">
+    <link rel="icon" href="{{ $faviconUrl }}" type="{{ $faviconType }}">
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="@yield('description', 'GreenPlant - питомник растений. Продажа саженцев и взрослых деревьев туи различных сортов. Гарантия приживаемости, доставка по России.')">
-    <meta name="keywords" content="@yield('keywords', 'туя, саженцы туи, купить тую, туя западная, живая изгородь, питомник растений, GreenPlant')">
-    <meta name="author" content="GreenPlant">
+    <meta name="description" content="@yield('description', $siteDescription)">
+    <meta name="keywords" content="@yield('keywords', $siteKeywords)">
+    <meta name="author" content="{{ $siteAuthor }}">
     <meta name="robots" content="index, follow">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('og_title', 'GreenPlant - Продажа саженцев и деревьев туи')">
-    <meta property="og:description" content="@yield('og_description', 'Питомник растений GreenPlant. Продажа саженцев и взрослых деревьев туи различных сортов с гарантией приживаемости.')">
+    <meta property="og:title" content="@yield('og_title', $siteName . ' - Продажа саженцев и деревьев туи')">
+    <meta property="og:description" content="@yield('og_description', $siteDescription)">
     <meta property="og:image" content="@yield('og_image', asset('assets/images/bg_1.png'))">
-    <meta property="og:site_name" content="GreenPlant">
+    <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:locale" content="ru_RU">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('og_title', 'GreenPlant - Продажа саженцев и деревьев туи')">
-    <meta property="twitter:description" content="@yield('og_description', 'Питомник растений GreenPlant')">
+    <meta property="twitter:title" content="@yield('og_title', $siteName . ' - Продажа саженцев и деревьев туи')">
+    <meta property="twitter:description" content="@yield('og_description', $siteDescription)">
     <meta property="twitter:image" content="@yield('og_image', asset('assets/images/bg_1.png'))">
     
     <link rel="canonical" href="{{ url()->current() }}">
@@ -78,7 +97,13 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">GreenPlant</a>
+            <a class="navbar-brand" href="{{ route('home') }}">
+                @if($logoUrl)
+                    <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="site-logo">
+                @else
+                    {{ $siteName }}
+                @endif
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span>
             </button>
@@ -158,8 +183,12 @@
             <div class="row mb-5">
                 <div class="col-md">
                     <div class="ftco-footer-widget mb-4">
-                        <h2 class="ftco-heading-2">GreenPlant</h2>
-                        <p>{{ \App\Models\Setting::get('site_description', 'Питомник растений. Специализируемся на выращивании и продаже различных сортов туи премиум-качества.') }}</p>
+                        @if($logoUrl)
+                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="footer-logo">
+                        @else
+                            <h2 class="ftco-heading-2">{{ $siteName }}</h2>
+                        @endif
+                        <p>{{ $siteDescription }}</p>
                         <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                             @if(\App\Models\Setting::get('instagram_url'))
                             <li class="ftco-animate"><a href="{{ \App\Models\Setting::get('instagram_url') }}"><span class="icon-instagram"></span></a></li>

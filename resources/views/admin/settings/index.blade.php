@@ -39,6 +39,45 @@
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         a[href*="admin"] div { transition: all 0.3s ease; }
         a[href*="admin"]:hover div { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important; }
+        .image-preview-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 14px;
+            padding: 18px;
+            border: 2px dashed #e3e7ef;
+            border-radius: 14px;
+            background: #fdfdff;
+        }
+        .image-preview-card img {
+            display: block;
+            max-height: 72px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(82, 111, 173, 0.2);
+        }
+        .image-preview-card .favicon-frame {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            background: #f5f7fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 0 1px rgba(102, 126, 234, 0.18);
+        }
+        .image-preview-card .favicon-frame img {
+            max-width: 48px;
+            max-height: 48px;
+            box-shadow: none;
+        }
+        .remove-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #c0392b;
+        }
     </style>
 </head>
 <body>
@@ -69,7 +108,7 @@
                 <button class="tab-button" data-tab="notifications">🔔 Уведомления</button>
             </div>
 
-            <form action="{{ route('admin.settings.update') }}" method="POST">
+            <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @php $index = 0; @endphp
 
@@ -202,6 +241,7 @@
                 <div class="tab-content" id="tab-general">
                     <h3 class="section-title">🏠 Основные настройки сайта</h3>
                     @forelse($settings['general'] ?? [] as $setting)
+                    @continue(in_array($setting->key, ['site_favicon', 'site_logo']))
                     <div class="form-group">
                         <label for="{{ $setting->key }}">
                             @if($setting->key == 'site_name') Название сайта
@@ -223,6 +263,56 @@
                     @empty
                     <p style="color: #999;">Настройки пока не добавлены</p>
                     @endforelse
+
+                    @php
+                        $siteFavicon = \App\Models\Setting::get('site_favicon');
+                        $siteLogo = \App\Models\Setting::get('site_logo');
+                    @endphp
+
+                    <h3 class="section-title" style="margin-top: 40px;">🖼️ Брендирование</h3>
+                    <div class="form-group">
+                        <label for="site_favicon">Favicon сайта</label>
+                        @if($siteFavicon)
+                            <div class="image-preview-card">
+                                <div class="favicon-frame">
+                                    <img src="{{ asset('storage/' . $siteFavicon) }}" alt="Текущий favicon">
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #2f3367;">Текущий файл</div>
+                                    <div class="help-text">{{ $siteFavicon }}</div>
+                                </div>
+                            </div>
+                        @endif
+                        <input type="file" id="site_favicon" name="site_favicon" accept=".png,.jpg,.jpeg,.svg,.ico">
+                        <div class="help-text">PNG / JPG / SVG / ICO, до 2 МБ. Рекомендуемый размер: 64×64 или 512×512.</div>
+                        @if($siteFavicon)
+                            <label class="remove-checkbox">
+                                <input type="checkbox" name="remove_site_favicon" value="1">
+                                Удалить текущий favicon
+                            </label>
+                        @endif
+                    </div>
+
+                    <div class="form-group">
+                        <label for="site_logo">Логотип сайта</label>
+                        @if($siteLogo)
+                            <div class="image-preview-card">
+                                <img src="{{ asset('storage/' . $siteLogo) }}" alt="Текущий логотип">
+                                <div>
+                                    <div style="font-weight: 600; color: #2f3367;">Текущий файл</div>
+                                    <div class="help-text">{{ $siteLogo }}</div>
+                                </div>
+                            </div>
+                        @endif
+                        <input type="file" id="site_logo" name="site_logo" accept=".png,.jpg,.jpeg,.svg">
+                        <div class="help-text">PNG / JPG / SVG, до 4 МБ. Желательно прозрачный фон, высота до 80px.</div>
+                        @if($siteLogo)
+                            <label class="remove-checkbox">
+                                <input type="checkbox" name="remove_site_logo" value="1">
+                                Удалить текущий логотип
+                            </label>
+                        @endif
+                    </div>
 
                     <h3 class="section-title" style="margin-top: 40px;">📞 Контактная информация</h3>
                     <div class="form-row">

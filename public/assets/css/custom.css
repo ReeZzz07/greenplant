@@ -1,5 +1,17 @@
 /* Custom styles for GreenPlant */
 
+.site-logo {
+    max-height: 52px;
+    width: auto;
+}
+
+.footer-logo {
+    max-height: 56px;
+    width: auto;
+    margin-bottom: 15px;
+    display: block;
+}
+
 /* ========================================
    Единое соотношение сторон для карточек товара
 ======================================== */
