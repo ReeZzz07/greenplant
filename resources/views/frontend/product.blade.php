@@ -9,28 +9,9 @@
 @section('og_image', $product->first_image_url)
 
 @section('content')
-    @php
-        $heroBackgroundImage = $product->hero_background_image
-            ? asset('storage/' . $product->hero_background_image)
-            : asset('assets/images/bg_6.jpg');
-
-        $heroBackgroundColor = $product->hero_background_color
-            ? '#' . ltrim($product->hero_background_color, '#')
-            : '#82ae46';
-
-        $heroBackgroundSize = $product->hero_background_size ?: 'cover';
-        $heroBackgroundPosition = $product->hero_background_position ?: 'center center';
-        $heroOverlayType = $product->hero_overlay_type ?: 'darken';
-        $heroOverlayOpacity = max(0, min(100, (int) ($product->hero_overlay_opacity ?? 40)));
-    @endphp
-
     <!-- Page Header -->
-    <div class="hero-wrap hero-bread" style="position: relative; overflow: hidden; background-color: {{ $heroBackgroundColor }};">
-        <div class="hero-background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ $heroBackgroundImage }}'); background-size: {{ $heroBackgroundSize }}; background-position: {{ $heroBackgroundPosition }}; background-repeat: no-repeat; z-index: 0;"></div>
-        @if($heroOverlayType !== 'none')
-            <div class="overlay-layer" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; background: {{ $heroOverlayType === 'lighten' ? 'rgba(255, 255, 255, ' . ($heroOverlayOpacity / 100) . ')' : 'rgba(0, 0, 0, ' . ($heroOverlayOpacity / 100) . ')' }};"></div>
-        @endif
-        <div class="container" style="position: relative; z-index: 1;">
+    <div class="hero-wrap hero-bread" style="background-image: url('{{ asset('assets/images/bg_6.jpg') }}'); background-size: cover; background-position: center;">
+        <div class="container">
             <div class="row no-gutters slider-text align-items-center justify-content-center" style="height: 300px;">
                 <div class="col-md-9 ftco-animate text-center">
                     <h1 class="mb-0 bread">{{ $product->name }}</h1>

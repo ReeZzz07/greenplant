@@ -48,12 +48,6 @@ class ProductController extends Controller
             'image' => 'nullable|image|max:2048',
             'gallery_images' => 'nullable|array|max:10',
             'gallery_images.*' => 'image|max:5120',
-            'hero_background_image' => 'nullable|image|max:4096',
-            'hero_background_position' => 'nullable|string|max:191',
-            'hero_background_size' => 'nullable|string|max:191',
-            'hero_background_color' => 'nullable|string|max:20',
-            'hero_overlay_type' => 'nullable|string|in:none,darken,lighten',
-            'hero_overlay_opacity' => 'nullable|integer|min:0|max:100',
             'stock' => 'nullable|integer|min:0',
             'sku' => 'nullable|string|unique:products,sku',
             'is_active' => 'boolean',
@@ -85,25 +79,6 @@ class ProductController extends Controller
                 $validated['image'] = $galleryImages[0];
             }
         }
-
-        if ($request->hasFile('hero_background_image')) {
-            $validated['hero_background_image'] = $request->file('hero_background_image')->store('products/hero', 'public');
-        } else {
-            unset($validated['hero_background_image']);
-        }
-
-        $position = trim($validated['hero_background_position'] ?? '');
-        $size = trim($validated['hero_background_size'] ?? '');
-        $overlayType = $validated['hero_overlay_type'] ?? 'darken';
-        $overlayOpacity = isset($validated['hero_overlay_opacity'])
-            ? (int)$validated['hero_overlay_opacity']
-            : 40;
-
-        $validated['hero_background_position'] = $position !== '' ? $position : 'center center';
-        $validated['hero_background_size'] = $size !== '' ? $size : 'cover';
-        $validated['hero_overlay_type'] = $overlayType;
-        $validated['hero_overlay_opacity'] = max(0, min(100, $overlayOpacity));
-        $validated['hero_background_color'] = $this->normalizeHexColor($validated['hero_background_color'] ?? null);
 
         unset($validated['gallery_images']);
 
@@ -148,13 +123,6 @@ class ProductController extends Controller
             'gallery_images.*' => 'image|max:5120',
             'remove_images' => 'nullable|array',
             'remove_images.*' => 'string',
-            'hero_background_image' => 'nullable|image|max:4096',
-            'hero_background_position' => 'nullable|string|max:191',
-            'hero_background_size' => 'nullable|string|max:191',
-            'hero_background_color' => 'nullable|string|max:20',
-            'hero_overlay_type' => 'nullable|string|in:none,darken,lighten',
-            'hero_overlay_opacity' => 'nullable|integer|min:0|max:100',
-            'remove_hero_background' => 'nullable|boolean',
             'stock' => 'nullable|integer|min:0',
             'sku' => 'nullable|string|unique:products,sku,' . $product->id,
             'is_active' => 'boolean',
@@ -218,32 +186,7 @@ class ProductController extends Controller
             $validated['image'] = $existingImages->first() ?? null;
         }
 
-        if ($request->boolean('remove_hero_background')) {
-            if ($product->hero_background_image) {
-                Storage::disk('public')->delete($product->hero_background_image);
-            }
-            $validated['hero_background_image'] = null;
-        } elseif ($request->hasFile('hero_background_image')) {
-            if ($product->hero_background_image) {
-                Storage::disk('public')->delete($product->hero_background_image);
-            }
-            $validated['hero_background_image'] = $request->file('hero_background_image')->store('products/hero', 'public');
-        } else {
-            unset($validated['hero_background_image']);
-        }
-
-        $position = trim($validated['hero_background_position'] ?? ($product->hero_background_position ?? ''));
-        $size = trim($validated['hero_background_size'] ?? ($product->hero_background_size ?? ''));
-        $overlayType = $validated['hero_overlay_type'] ?? $product->hero_overlay_type ?? 'darken';
-        $overlayOpacityInput = $validated['hero_overlay_opacity'] ?? $product->hero_overlay_opacity ?? 40;
-
-        $validated['hero_background_position'] = $position !== '' ? $position : 'center center';
-        $validated['hero_background_size'] = $size !== '' ? $size : 'cover';
-        $validated['hero_overlay_type'] = $overlayType;
-        $validated['hero_overlay_opacity'] = max(0, min(100, (int) $overlayOpacityInput));
-        $validated['hero_background_color'] = $this->normalizeHexColor($validated['hero_background_color'] ?? $product->hero_background_color);
-
-        unset($validated['gallery_images'], $validated['remove_images'], $validated['remove_hero_background']);
+        unset($validated['gallery_images'], $validated['remove_images']);
 
         $product->update($validated);
 
@@ -267,10 +210,6 @@ class ProductController extends Controller
             }
         }
 
-        if ($product->hero_background_image) {
-            Storage::disk('public')->delete($product->hero_background_image);
-        }
-
         $product->delete();
 
         return redirect()->route('admin.products.index')
@@ -288,21 +227,6 @@ class ProductController extends Controller
             'success' => true,
             'is_active' => $product->is_active
         ]);
-    }
-
-    protected function normalizeHexColor(?string $color): ?string
-    {
-        if ($color === null) {
-            return null;
-        }
-
-        $color = trim($color);
-
-        if ($color === '') {
-            return null;
-        }
-
-        return '#' . ltrim($color, '#');
     }
 }
 

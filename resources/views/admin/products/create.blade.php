@@ -138,8 +138,6 @@
                     </div>
                 </div>
 
-            @include('admin.products.partials.hero-settings', ['product' => null, 'allowRemove' => false])
-
                 <div class="form-group">
                     <div class="checkbox-group">
                         <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
