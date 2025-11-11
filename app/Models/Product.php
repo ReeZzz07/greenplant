@@ -20,6 +20,12 @@ class Product extends Model
         'category_id',
         'image',
         'images',
+        'hero_background_image',
+        'hero_background_position',
+        'hero_background_size',
+        'hero_background_color',
+        'hero_overlay_type',
+        'hero_overlay_opacity',
         'is_active',
         'is_featured',
         'stock',
@@ -35,6 +41,7 @@ class Product extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'images' => 'array',
+        'hero_overlay_opacity' => 'integer',
     ];
 
     public function category()
@@ -64,6 +71,13 @@ class Product extends Model
             return round((($this->old_price - $this->price) / $this->old_price) * 100);
         }
         return 0;
+    }
+
+    public function getHeroBackgroundImageUrlAttribute(): ?string
+    {
+        return $this->hero_background_image
+            ? asset('storage/' . $this->hero_background_image)
+            : null;
     }
 
     public function scopeActive($query)
