@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\AboutPageSettingController;
 use App\Http\Controllers\Admin\BlogPageSettingController;
 use App\Http\Controllers\Admin\ContactPageSettingController;
 use App\Http\Controllers\Admin\AccountPageSettingController;
+use App\Http\Controllers\Admin\ProductHeroSettingController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -152,6 +153,8 @@ Route::prefix('admin')
         Route::resource('products', ProductController::class);
         Route::post('products/{product}/toggle-active', [ProductController::class, 'toggleActive'])
             ->name('products.toggle-active');
+        Route::post('product-hero-settings', [ProductHeroSettingController::class, 'update'])
+            ->name('product-hero-settings.update');
         
         // Categories
         Route::resource('categories', CategoryController::class);

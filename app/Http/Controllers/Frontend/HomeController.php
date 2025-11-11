@@ -106,7 +106,9 @@ $q->where('slug', $request->category);
             ->take(4)
             ->get();
 
-        return view('frontend.product', compact('product', 'relatedProducts'));
+        $productHeroSetting = \App\Models\ProductHeroSetting::getSettings();
+
+        return view('frontend.product', compact('product', 'relatedProducts', 'productHeroSetting'));
     }
 
     /**

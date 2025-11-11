@@ -20,7 +20,9 @@ class ProductController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('admin.products.index', compact('products'));
+        $productHeroSetting = \App\Models\ProductHeroSetting::getSettings();
+
+        return view('admin.products.index', compact('products', 'productHeroSetting'));
     }
 
     /**

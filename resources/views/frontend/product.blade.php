@@ -9,9 +9,42 @@
 @section('og_image', $product->first_image_url)
 
 @section('content')
+    @php
+        $heroSetting = $productHeroSetting ?? null;
+        $heroEnabled = $heroSetting && $heroSetting->is_active;
+        $heroBackgroundImage = $heroEnabled && $heroSetting->background_image
+            ? asset('storage/' . $heroSetting->background_image)
+            : asset('assets/images/bg_6.jpg');
+        $heroBackgroundSize = $heroEnabled ? ($heroSetting->background_size ?? 'cover') : 'cover';
+        $heroBackgroundPosition = $heroEnabled ? ($heroSetting->background_position ?? 'center center') : 'center center';
+        $heroBackgroundColor = $heroEnabled ? ($heroSetting->background_color ?? '#82ae46') : '#82ae46';
+        $heroOverlayType = $heroEnabled ? ($heroSetting->overlay_type ?? 'darken') : 'darken';
+        $heroOverlayOpacity = $heroEnabled ? max(0, min(100, $heroSetting->overlay_opacity ?? 50)) : 50;
+        $heroHasOverlay = $heroEnabled && $heroOverlayType !== 'none';
+        $heroOverlayColor = $heroHasOverlay
+            ? ($heroOverlayType === 'darken'
+                ? 'rgba(0, 0, 0, ' . ($heroOverlayOpacity / 100) . ')'
+                : 'rgba(255, 255, 255, ' . ($heroOverlayOpacity / 100) . ')')
+            : null;
+    @endphp
+
     <!-- Page Header -->
-    <div class="hero-wrap hero-bread" style="background-image: url('{{ asset('assets/images/bg_6.jpg') }}'); background-size: cover; background-position: center;">
-        <div class="container">
+    <div
+        class="hero-wrap hero-bread"
+        style="
+            position: relative;
+            overflow: hidden;
+            background-color: {{ $heroBackgroundColor }};
+            background-image: url('{{ $heroBackgroundImage }}');
+            background-size: {{ $heroBackgroundSize }};
+            background-position: {{ $heroBackgroundPosition }};
+            background-repeat: no-repeat;
+        "
+    >
+        @if($heroHasOverlay)
+            <div class="overlay" style="position: absolute; opacity: 1; inset: 0; width: 100%; height: 100%; background: {{ $heroOverlayColor }}; z-index: 0;"></div>
+        @endif
+        <div class="container" style="position: relative; z-index: 1;">
             <div class="row no-gutters slider-text align-items-center justify-content-center" style="height: 300px;">
                 <div class="col-md-9 ftco-animate text-center">
                     <h1 class="mb-0 bread">{{ $product->name }}</h1>
