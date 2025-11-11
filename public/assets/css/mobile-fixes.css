@@ -135,6 +135,19 @@ body.owl-grab {
 
 /* Для мобильных устройств: обеспечиваем возможность прокрутки */
 @media (max-width: 991px) {
+    #home-section .home-slider .slider-item img.one-third {
+        display: none !important;
+    }
+    .owl-carousel.home-slider .slider-item .slider-text .one-forth {
+        display: flex;
+        justify-content: center;
+    }
+    .text {
+        max-width: 600px;
+    }
+    .owl-carousel.home-slider .slider-item .slider-text h1 {
+        color: #82ae46;
+    }
     .home-slider,
     .carousel-testimony,
     .owl-carousel {
@@ -168,6 +181,9 @@ body.owl-grab {
     
     .js-fullheight {
         height: 85vh !important;
+    }
+    .owl-carousel.home-slider .slider-item .slider-text p {
+        font-size:18px;
     }
 }
 
