@@ -20,6 +20,12 @@
         $faviconType = $faviconTypeMap[$faviconExt] ?? 'image/png';
         $logoUrl = $siteLogo ? asset('storage/' . $siteLogo) : null;
     @endphp
+    <!-- Yandex Metrika Code -->
+    @php($yandexMetrikaCode = \App\Models\Setting::get('yandex_metrika_id'))
+    @if($yandexMetrikaCode)
+        {!! $yandexMetrikaCode !!}
+    @endif
+
     <title>@yield('title', $siteName . ' - Продажа саженцев и деревьев туи')</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -293,6 +299,7 @@
     <script src="{{ asset('assets/js/cart.js') }}"></script>
     
     @yield('scripts')
+
 </body>
 </html>
 

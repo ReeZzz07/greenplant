@@ -408,12 +408,17 @@
                     <div class="form-group">
                         <label for="{{ $setting->key }}">
                             @if($setting->key == 'google_analytics_id') Google Analytics ID
-                            @elseif($setting->key == 'yandex_metrika_id') Яндекс.Метрика ID
+                            @elseif($setting->key == 'yandex_metrika_id') Код Яндекс.Метрики
                             @elseif($setting->key == 'google_tag_manager_id') Google Tag Manager ID
                             @else {{ ucfirst(str_replace('_', ' ', $setting->key)) }}
                             @endif
                         </label>
-                        <input type="{{ $setting->type ?? 'text' }}" id="{{ $setting->key }}" name="settings[{{ $index }}][value]" value="{{ $setting->value }}" placeholder="UA-XXXXXXXXX-X">
+                        @if($setting->key == 'yandex_metrika_id')
+                            <textarea id="{{ $setting->key }}" name="settings[{{ $index }}][value]" rows="6" placeholder="Вставьте код счетчика Яндекс.Метрики">{{ $setting->value }}</textarea>
+                            <div class="help-text">Скопируйте код счетчика из личного кабинета Яндекс.Метрики и вставьте сюда полностью.</div>
+                        @else
+                            <input type="{{ $setting->type ?? 'text' }}" id="{{ $setting->key }}" name="settings[{{ $index }}][value]" value="{{ $setting->value }}" placeholder="UA-XXXXXXXXX-X">
+                        @endif
                         <input type="hidden" name="settings[{{ $index }}][key]" value="{{ $setting->key }}">
                         @php $index++; @endphp
                     </div>
