@@ -32,6 +32,7 @@ class SitemapController extends Controller
         $pages = [
             ['route' => 'about', 'priority' => '0.7'],
             ['route' => 'blog', 'priority' => '0.8'],
+            ['route' => 'wholesale', 'priority' => '0.8'],
             ['route' => 'contact', 'priority' => '0.6'],
         ];
         

@@ -1,5 +1,36 @@
+# Robots.txt для GreenPlant
+# Разрешаем индексацию всем поисковым роботам
+
 User-agent: *
 Allow: /
 
-Sitemap: {{ url('/sitemap.xml') }}
+# Запрещаем индексацию служебных разделов
+Disallow: /admin/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /node_modules/
+Disallow: /api/
+Disallow: /customer-login
+Disallow: /checkout
+Disallow: /cart
+Disallow: /order/
 
+# Специальные правила для Яндекс
+User-agent: Yandex
+Allow: /
+Disallow: /admin/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /api/
+Crawl-delay: 1
+
+# Специальные правила для Google
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /api/
+
+# Указываем расположение sitemap (относительный путь, работает на любом домене)
+Sitemap: /sitemap.xml
