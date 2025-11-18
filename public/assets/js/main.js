@@ -151,11 +151,12 @@
 
 	// scroll
 	var scrollWindow = function() {
-		$(window).scroll(function(){
-			var $w = $(this),
-					st = $w.scrollTop(),
-					navbar = $('.ftco_navbar'),
-					sd = $('.js-scroll-wrap');
+		var ticking = false;
+		
+		function updateOnScroll() {
+			var st = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var navbar = $('.ftco_navbar');
+			var sd = $('.js-scroll-wrap');
 
 			if (st > 150) {
 				if ( !navbar.hasClass('scrolled') ) {
@@ -184,6 +185,16 @@
 				if(sd.length > 0) {
 					sd.removeClass('sleep');
 				}
+			}
+			
+			ticking = false;
+		}
+		
+		// Используем requestAnimationFrame для оптимизации
+		$(window).on('scroll', function(){
+			if (!ticking) {
+				window.requestAnimationFrame(updateOnScroll);
+				ticking = true;
 			}
 		});
 	};
@@ -354,7 +365,7 @@
 
 setInterval(function() { makeTimer(); }, 1000);
 
-// Исправление для мобильных устройств: разрешаем вертикальную прокрутку на слайдере
+	// Исправление для мобильных устройств: разрешаем вертикальную прокрутку на слайдере
 $(document).ready(function() {
 	var touchStartX = 0;
 	var touchStartY = 0;
@@ -365,47 +376,42 @@ $(document).ready(function() {
 	// Обработчик для всех слайдеров
 	$('.home-slider, .carousel-testimony, .owl-carousel').each(function() {
 		var $slider = $(this);
+		var sliderEl = $slider[0];
 		
-		$slider.on('touchstart', function(e) {
-			touchStartX = e.touches[0].clientX;
-			touchStartY = e.touches[0].clientY;
-			isSwiping = false;
-		});
-		
-		$slider.on('touchmove', function(e) {
-			if (!e.touches || e.touches.length === 0) return;
-			
-			touchEndX = e.touches[0].clientX;
-			touchEndY = e.touches[0].clientY;
-			
-			var deltaX = Math.abs(touchEndX - touchStartX);
-			var deltaY = Math.abs(touchEndY - touchStartY);
-			
-			// Определяем направление свайпа
-			// Если вертикальное движение больше горизонтального на 30%
-			if (deltaY > deltaX * 1.3 && deltaY > 10) {
-				// Это вертикальная прокрутка - не блокируем
+		// Используем нативный addEventListener с passive: true для touchstart
+		if (sliderEl) {
+			sliderEl.addEventListener('touchstart', function(e) {
+				touchStartX = e.touches[0].clientX;
+				touchStartY = e.touches[0].clientY;
 				isSwiping = false;
-				// Разрешаем событие по умолчанию (прокрутку страницы)
-				return true;
-			} else if (deltaX > deltaY * 1.3 && deltaX > 10) {
-				// Это горизонтальный свайп - для слайдера
-				isSwiping = true;
-				// Блокируем прокрутку страницы при горизонтальном свайпе
-				e.preventDefault();
-			}
-		});
-		
-		$slider.on('touchend', function() {
-			isSwiping = false;
-		});
-	});
-	
-	// Дополнительная защита: следим за body
-	$('body').on('touchmove', function(e) {
-		// Если мы не делаем свайп по слайдеру, разрешаем прокрутку
-		if (!isSwiping) {
-			return true;
+			}, { passive: true });
+			
+			// touchmove должен быть non-passive, если мы хотим предотвратить прокрутку при горизонтальном свайпе
+			sliderEl.addEventListener('touchmove', function(e) {
+				if (!e.touches || e.touches.length === 0) return;
+				
+				touchEndX = e.touches[0].clientX;
+				touchEndY = e.touches[0].clientY;
+				
+				var deltaX = Math.abs(touchEndX - touchStartX);
+				var deltaY = Math.abs(touchEndY - touchStartY);
+				
+				// Определяем направление свайпа
+				// Если вертикальное движение больше горизонтального на 30%
+				if (deltaY > deltaX * 1.3 && deltaY > 10) {
+					// Это вертикальная прокрутка - не блокируем
+					isSwiping = false;
+				} else if (deltaX > deltaY * 1.3 && deltaX > 10) {
+					// Это горизонтальный свайп - для слайдера
+					isSwiping = true;
+					// Блокируем прокрутку страницы при горизонтальном свайпе
+					e.preventDefault();
+				}
+			}, { passive: false });
+			
+			sliderEl.addEventListener('touchend', function() {
+				isSwiping = false;
+			}, { passive: true });
 		}
 	});
 });

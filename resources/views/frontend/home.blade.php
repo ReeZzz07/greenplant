@@ -118,7 +118,33 @@
                 </div>
             @endforelse
         </div>
+        <!-- Кнопка прокрутки вниз -->
+        <a href="javascript:void(0)" class="scroll-down-btn" aria-label="Прокрутить вниз" onclick="event.preventDefault(); const nextSection = document.querySelector('#home-section').nextElementSibling; if(nextSection) nextSection.scrollIntoView({behavior: 'smooth'});">
+            <i class="fas fa-chevron-down"></i>
+        </a>
     </section>
+
+    <script>
+        // Исправление проблемы с увеличением фона hero-секции на iOS
+        (function() {
+            // Определяем iOS устройство
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            // Определяем мобильное устройство
+            const isMobile = window.innerWidth <= 991;
+            
+            if (isIOS || isMobile) {
+                const heroSection = document.getElementById('home-section');
+                if (heroSection) {
+                    // Убираем background-attachment: fixed на iOS и мобильных устройствах
+                    heroSection.style.backgroundAttachment = 'scroll';
+                    // Гарантируем правильный размер фона
+                    heroSection.style.webkitBackgroundSize = 'cover';
+                    heroSection.style.backgroundSize = 'cover';
+                    heroSection.style.backgroundPosition = 'center center';
+                }
+            }
+        })();
+    </script>
 
     <!-- Services Section -->
     <section class="ftco-section ftco-no-pt ftco-no-pb">

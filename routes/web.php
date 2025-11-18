@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\CatalogPageSettingController;
 use App\Http\Controllers\Admin\AboutPageSettingController;
 use App\Http\Controllers\Admin\BlogPageSettingController;
 use App\Http\Controllers\Admin\ContactPageSettingController;
+use App\Http\Controllers\Admin\WholesaleSettingController;
 use App\Http\Controllers\Admin\AccountPageSettingController;
 use App\Http\Controllers\Admin\ProductHeroSettingController;
 use App\Http\Controllers\Admin\UserController;
@@ -41,6 +42,7 @@ Route::get('/product/{slug}', [HomeController::class, 'product'])->name('product
 Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [HomeController::class, 'blogPost'])->name('blog.post');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/wholesale', [HomeController::class, 'wholesale'])->name('wholesale');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/info', [HomeController::class, 'info'])->name('info');
 Route::post('/contact', [ContactController::class, 'store'])
@@ -215,6 +217,9 @@ Route::prefix('admin')
         
         // Contact Page Settings
         Route::resource('contact-page-settings', ContactPageSettingController::class);
+        
+        // Wholesale Page Settings
+        Route::resource('wholesale-settings', WholesaleSettingController::class);
         
         // Account Page Settings
         Route::get('account-page-settings', [AccountPageSettingController::class, 'index'])->name('account-page-settings.index');

@@ -125,8 +125,19 @@
                     <li class="nav-item {{ request()->routeIs('about') ? 'active' : '' }}">
                         <a href="{{ route('about') }}" class="nav-link">О компании</a>
                     </li>
-                    <li class="nav-item {{ request()->routeIs('blog*') ? 'active' : '' }}">
-                        <a href="{{ route('blog') }}" class="nav-link">Блог</a>
+                    <li class="nav-item dropdown {{ request()->routeIs('wholesale') || request()->routeIs('blog*') || request()->routeIs('info') ? 'active' : '' }}">
+                        <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Информация
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="infoDropdown">
+                            <a class="dropdown-item {{ request()->routeIs('wholesale') ? 'active' : '' }}" href="{{ route('wholesale') }}">Оптовым покупателям</a>
+                            <a class="dropdown-item {{ request()->routeIs('blog*') ? 'active' : '' }}" href="{{ route('blog') }}">Советы и уход</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item {{ request()->routeIs('info') && request()->get('tab') === 'payment' ? 'active' : '' }}" href="{{ route('info', ['tab' => 'payment']) }}">Оплата</a>
+                            <a class="dropdown-item {{ request()->routeIs('info') && request()->get('tab') === 'delivery' ? 'active' : '' }}" href="{{ route('info', ['tab' => 'delivery']) }}">Доставка</a>
+                            <a class="dropdown-item {{ request()->routeIs('info') && request()->get('tab') === 'warranty' ? 'active' : '' }}" href="{{ route('info', ['tab' => 'warranty']) }}">Гарантии</a>
+                            <a class="dropdown-item {{ request()->routeIs('info') && request()->get('tab') === 'faq' ? 'active' : '' }}" href="{{ route('info', ['tab' => 'faq']) }}">Частые вопросы</a>
+                        </div>
                     </li>
                     <li class="nav-item {{ request()->routeIs('contact') ? 'active' : '' }}">
                         <a href="{{ route('contact') }}" class="nav-link">Контакты</a>
@@ -214,7 +225,7 @@
                         <ul class="list-unstyled">
                             <li><a href="{{ route('catalog') }}" class="py-2 d-block">Каталог</a></li>
                             <li><a href="{{ route('about') }}" class="py-2 d-block">О компании</a></li>
-                            <li><a href="{{ route('blog') }}" class="py-2 d-block">Блог</a></li>
+                            <li><a href="{{ route('blog') }}" class="py-2 d-block">Советы и уход</a></li>
                             <li><a href="{{ route('contact') }}" class="py-2 d-block">Контакты</a></li>
                         </ul>
                     </div>
@@ -266,6 +277,27 @@
     <script src="{{ asset('assets/js/jquery.waypoints.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.stellar.min.js') }}"></script>
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
+    <script>
+        // Патч для Owl Carousel: переопределяем addEventListener для элементов слайдера
+        // чтобы touchstart события были passive по умолчанию
+        (function() {
+            var originalAddEventListener = EventTarget.prototype.addEventListener;
+            EventTarget.prototype.addEventListener = function(type, listener, options) {
+                // Если это touchstart на элементе слайдера, делаем его passive
+                if (type === 'touchstart' && this.classList && 
+                    (this.classList.contains('owl-carousel') || 
+                     this.closest && this.closest('.owl-carousel'))) {
+                    // Проверяем, не указан ли уже options
+                    if (options === undefined || options === false || 
+                        (typeof options === 'object' && !options.hasOwnProperty('passive'))) {
+                        options = Object.assign({ passive: true }, 
+                            typeof options === 'object' ? options : {});
+                    }
+                }
+                return originalAddEventListener.call(this, type, listener, options);
+            };
+        })();
+    </script>
     <script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
     <script>
         (function () {

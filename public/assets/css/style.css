@@ -8548,7 +8548,7 @@ h1, h2, h3, h4, h5,
             text-align: center; } }
         .owl-carousel.home-slider .slider-item .slider-text .one-third {
           width: 65%;
-          margin-right: 50px;
+          /* margin-right: 50px; */
           position: relative;
           z-index: -1;
           background-position: center center; }

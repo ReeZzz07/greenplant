@@ -1,5 +1,49 @@
 /* Фиксы для мобильных устройств */
 
+/* Стили для кнопки "Написать нам" в секции CTA страницы "Оптовым покупателям" */
+.wholesale-cta-contact-btn {
+    color: #fff !important;
+}
+
+.wholesale-cta-contact-btn:hover {
+    background-color: #6a8f38 !important;
+    border-color: #6a8f38 !important;
+    color: #fff !important;
+}
+
+.wholesale-cta-contact-btn:focus {
+    background-color: #6a8f38 !important;
+    border-color: #6a8f38 !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(130, 174, 70, 0.5) !important;
+}
+
+.wholesale-cta-contact-btn:active {
+    background-color: #5a7d2e !important;
+    border-color: #5a7d2e !important;
+    color: #fff !important;
+}
+
+/* Стили для кнопки "Позвонить" в секции CTA страницы "Оптовым покупателям" */
+.wholesale-cta-call-btn:hover {
+    background-color: #82ae46 !important;
+    border-color: #82ae46 !important;
+    color: #fff !important;
+}
+
+.wholesale-cta-call-btn:focus {
+    background-color: #82ae46 !important;
+    border-color: #82ae46 !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(130, 174, 70, 0.5) !important;
+}
+
+.wholesale-cta-call-btn:active {
+    background-color: #6a8f38 !important;
+    border-color: #6a8f38 !important;
+    color: #fff !important;
+}
+
 /* Акцентный цвет для мобильного меню */
 .navbar-toggler {
     border-color: #82ae46 !important;
@@ -181,9 +225,342 @@ body.owl-grab {
     
     .js-fullheight {
         height: 85vh !important;
+        min-height: 85vh !important;
     }
+    
+    .owl-carousel.home-slider {
+        height: 85vh !important;
+        min-height: 85vh !important;
+    }
+    
+    .owl-carousel.home-slider .slider-item {
+        height: 85vh !important;
+        min-height: 85vh !important;
+    }
+    
+    .owl-carousel.home-slider .slider-item .slider-text {
+        height: 85vh !important;
+        min-height: 85vh !important;
+    }
+    
+    .owl-carousel.home-slider .slider-item .slider-text .one-forth {
+        height: 85vh !important;
+        min-height: 85vh !important;
+    }
+    
     .owl-carousel.home-slider .slider-item .slider-text p {
         font-size:18px;
+    }
+}
+
+/* Исправление проблемы с увеличением фона hero-секции на iOS */
+@supports (-webkit-touch-callout: none) {
+    /* iOS Safari */
+    #home-section.hero {
+        background-attachment: scroll !important;
+        -webkit-background-size: cover !important;
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+    }
+}
+
+/* Для всех мобильных устройств отключаем fixed attachment */
+@media (max-width: 991px) {
+    #home-section.hero {
+        background-attachment: scroll !important;
+        -webkit-background-size: cover !important;
+        background-size: cover !important;
+        background-position: center center !important;
+    }
+}
+
+/* Специальные правила для iOS устройств с фиксированным размером фона */
+@media screen and (-webkit-min-device-pixel-ratio: 2) {
+    @supports (-webkit-touch-callout: none) {
+        #home-section.hero {
+            background-attachment: scroll !important;
+            -webkit-background-size: cover !important;
+            background-size: cover !important;
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+    }
+}
+
+/* Высота hero-секции равна высоте экрана */
+#home-section.hero {
+    box-sizing: border-box;
+    height: calc( 100vh - 27.8px ) !important;
+    min-height: calc( 100vh - 27.8px )  !important;
+}
+
+.owl-carousel.home-slider {
+    height: 100vh !important;
+    min-height: 100vh !important;
+}
+
+/* .owl-carousel.home-slider .slider-item {
+    height: 100vh !important;
+    min-height: 100vh !important;
+}
+
+.owl-carousel.home-slider .slider-item .slider-text {
+    height: 100vh !important;
+    min-height: 100vh !important;
+}
+
+.owl-carousel.home-slider .slider-item .slider-text .one-forth {
+    height: 100vh !important;
+    min-height: 100vh !important;
+}
+
+.js-fullheight {
+    height: 100vh !important;
+    min-height: 100vh !important;
+}*/
+
+/* Исправление позиции булетов слайдера, чтобы они были видны */
+
+
+@media (max-width: 991px) {
+    #home-section.hero {
+        box-sizing: border-box;
+        height: calc( 100vh - 66px ) !important;
+        min-height: calc( 100vh - 66px )  !important;
+    }
+    .owl-carousel.home-slider .owl-dots {
+        display: none !important;
+    }
+}
+
+/* Исправление вылезания изображения слайдера за пределы на экранах 1024px+ */
+@media (min-width: 1024px) {
+    .home-slider .slider-item .container-fluid.p-0 {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    /* Ограничиваем ширину row, чтобы изображение не вылезало */
+    .home-slider .slider-item .slider-text {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    /* Обеспечиваем правильное отображение изображения */
+    .home-slider .slider-item .slider-text .one-third {
+        max-width: calc(65% - 25px);
+        margin-right: 0;
+    }
+}
+
+/* Анимированная кнопка прокрутки вниз */
+.scroll-down-btn {
+    position: absolute;
+    bottom: 40px;
+    left: calc( 50% - 25px);
+    transform: translateX(-50%);
+    z-index: 2;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(118, 118, 118, 0.3);
+    border: 1px solid #dee2e64a;
+    border-radius: 50%;
+    color: #dee2e687;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    animation: bounce-down 2s infinite;
+}
+
+.scroll-down-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.9);
+    color: #fff;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.scroll-down-btn i {
+    font-size: 20px;
+}
+
+@keyframes bounce-down {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Для мобильных устройств */
+@media (max-width: 991px) {
+    .scroll-down-btn {
+        bottom: 20px;
+        width: 45px;
+        height: 45px;
+    }
+    
+    .scroll-down-btn i {
+        font-size: 18px;
+    }
+}
+
+/* Стили для страницы "Оптовым покупателям" */
+.calculator-wrapper {
+    box-shadow: rgba(131, 174, 70, 0.548) 0px 0px 0px 0.5rem;
+    border-image: initial;
+}
+
+.calculator-form .form-label {
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.calculator-form .form-control {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+}
+
+.calculator-form .form-control:focus {
+    border-color: #82ae46;
+    box-shadow: 0 0 0 0.2rem rgba(130, 174, 70, 0.25);
+}
+
+.quantity-preset {
+    border-radius: 0;
+}
+
+.quantity-preset:hover {
+    background-color: #82ae46;
+    border-color: #82ae46;
+    color: white;
+}
+
+.quantity-preset.active {
+    background-color: #82ae46;
+    border-color: #82ae46;
+    color: white;
+}
+#calculator-results .bg-light {
+    border-radius: 10px;
+}
+#seedling-count,
+#total-costs,
+#net-profit {
+    color: #6c757d;
+}
+#calculator-results .bg-light:hover #seedling-count,
+#calculator-results .bg-light:hover #total-costs,
+#calculator-results .bg-light #net-profit,
+#calculator-results .bg-light #profitability {
+    color: #82ae46;
+    transition: all 0.3s ease-in-out;
+}
+.step-circle {
+    box-shadow: 0 4px 10px rgba(130, 174, 70, 0.3);
+}
+
+@media (max-width: 767px) {
+    .calculator-wrapper {
+        padding: 20px !important;
+    }
+    
+    .quantity-preset {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+    
+    #calculator-results .col-md-6,
+    #calculator-results .col-md-4 {
+        margin-bottom: 15px;
+    }
+}
+
+/* Стили для дропдауна "Информация" в навигации */
+.ftco-navbar-light .navbar-nav .dropdown-menu .dropdown-item.active {
+    background-color: #82ae46 !important;
+    color: white !important;
+}
+
+.ftco-navbar-light .navbar-nav .dropdown-menu .dropdown-item:hover {
+    background-color: rgba(130, 174, 70, 0.2) !important;
+    color: #98c954 !important;
+}
+
+.ftco-navbar-light .navbar-nav .dropdown-menu .dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 0.5rem 0;
+}
+
+/* Стили для карточек преимуществ на странице "Оптовым покупателям" */
+.wholesale-advantages .card {
+    border-radius: 15px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.wholesale-advantages .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(130, 174, 70, 0.2) !important;
+    border-color: #82ae46;
+}
+
+.wholesale-advantages .card-body {
+    padding: 2rem;
+}
+
+.wholesale-advantages .card-title {
+    color: #333;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.wholesale-advantages .card-text {
+    color: #666;
+    line-height: 1.6;
+}
+
+@media (max-width: 767px) {
+    .wholesale-advantages .card-body {
+        padding: 1.5rem;
+    }
+}
+
+/* Стили для карточек результатов калькулятора */
+.calculator-results .calculator-result-card {
+    border-radius: 15px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.calculator-results .calculator-result-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(87, 87, 87, 0.2) !important;
+    border-color: #82ae46;
+}
+
+@media (max-width: 767px) {
+    .calculator-results .calculator-result-card {
+        padding: 1.5rem !important;
     }
 }
 

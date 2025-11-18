@@ -14,6 +14,7 @@ use App\Models\HomePageGallery;
 use App\Models\HeroSetting;
 use App\Models\CatalogPageSetting;
 use App\Models\AboutPageSetting;
+use App\Models\WholesaleSetting;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -167,6 +168,15 @@ $q->where('slug', $request->category);
         $contactSettings = \App\Models\ContactPageSetting::getActive();
 
         return view('frontend.contact', compact('phone', 'email', 'address', 'contactSettings'));
+    }
+
+    /**
+     * Страница "Оптовым покупателям"
+     */
+    public function wholesale()
+    {
+        $wholesaleSettings = WholesaleSetting::getSettings();
+        return view('frontend.wholesale', compact('wholesaleSettings'));
     }
 
     /**

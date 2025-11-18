@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 
-@section('title', 'Блог - GreenPlant')
+@section('title', 'Советы и уход - GreenPlant')
 
 @section('content')
     <div class="hero-wrap hero-bread" style="position: relative; overflow: hidden;">
@@ -11,7 +11,7 @@
         <div class="container" style="position: relative; z-index: 1;">
             <div class="row no-gutters slider-text align-items-center justify-content-center" style="height: 300px;">
                 <div class="col-md-9 ftco-animate text-center">
-                    <h1 class="mb-0 bread">{{ $blogSettings && $blogSettings->title ? $blogSettings->title : 'Наш блог' }}</h1>
+                    <h1 class="mb-0 bread">{{ $blogSettings && $blogSettings->title ? $blogSettings->title : 'Советы и уход' }}</h1>
                     @if($blogSettings && $blogSettings->subtitle)
                         <p class="mt-3" style="color: rgba(255, 255, 255, 0.9); font-size: 18px;">{{ $blogSettings->subtitle }}</p>
                     @endif
@@ -27,7 +27,7 @@
                 <div class="col-12">
                     <p class="breadcrumbs mb-0">
                         <span class="mr-2"><a href="{{ route('home') }}">Главная</a></span>
-                        <span>Блог</span>
+                        <span>Советы и уход</span>
                     </p>
                 </div>
             </div>

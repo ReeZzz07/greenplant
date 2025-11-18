@@ -207,6 +207,14 @@
                                 </div>
                             </a>
 
+                            <a href="{{ route('admin.wholesale-settings.index') }}" onclick="event.preventDefault(); window.location.href='{{ route('admin.wholesale-settings.index') }}';" style="text-decoration: none; color: inherit;">
+                                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s; border-left: 4px solid #ffc107;">
+                                    <p style="font-size: 32px; margin-bottom: 12px;">💰</p>
+                                    <h4 style="margin: 0 0 8px 0; color: #333;">Страница "Оптовым покупателям"</h4>
+                                    <p style="margin: 0; color: #666; font-size: 14px;">Настройка фона, калькулятора и контента страницы оптовым покупателям</p>
+                                </div>
+                            </a>
+
                             <a href="{{ route('admin.account-page-settings.index') }}" onclick="event.preventDefault(); window.location.href='{{ route('admin.account-page-settings.index') }}';" style="text-decoration: none; color: inherit;">
                                 <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s; border-left: 4px solid #20c997;">
                                     <p style="font-size: 32px; margin-bottom: 12px;">👤</p>
