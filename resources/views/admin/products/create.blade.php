@@ -38,6 +38,19 @@
         .gallery-preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
         .gallery-preview-placeholder { color: #667eea; font-size: 13px; text-align: center; }
         .gallery-preview-item span { display: block; font-size: 12px; color: #555; margin-top: 8px; text-align: center; word-break: break-word; }
+        .characteristics-wrapper { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
+        .characteristic-item { border: 2px dashed #dfe3f6; border-radius: 12px; padding: 20px; background: #fdfdff; position: relative; }
+        .characteristic-fields { display: flex; flex-direction: column; gap: 12px; }
+        .characteristic-fields input,
+        .characteristic-fields textarea { width: 100%; }
+        .characteristic-fields textarea { min-height: 80px; }
+        .btn-add-characteristic { margin-top: 15px; background: #edf1ff; color: #4b5bdc; border: 2px solid #dfe3f6; }
+        .btn-add-characteristic:hover { background: #dfe6ff; }
+        .btn-remove-characteristic { position: absolute; top: 12px; right: 12px; border: none; background: rgba(220, 53, 69, 0.15); color: #dc3545; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; }
+        .btn-remove-characteristic:hover { background: rgba(220, 53, 69, 0.3); }
+        @media (max-width: 640px) {
+            .characteristic-item { padding: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -91,6 +104,49 @@
                     <label for="description">Полное описание</label>
                     <textarea id="description" name="description" style="min-height: 200px;">{{ old('description') }}</textarea>
                     @error('description')<div class="error">{{ $message }}</div>@enderror
+                </div>
+
+                @php
+                    $characteristics = old('characteristics', []);
+                @endphp
+                <div class="form-group">
+                    <label>Характеристики товара</label>
+                    <p class="help-text">Добавьте дополнительные параметры товара. Они будут отображаться на странице товара во вкладке «Характеристики».</p>
+                    <div class="characteristics-wrapper" data-role="characteristics-container">
+                        @forelse($characteristics as $index => $characteristic)
+                            <div class="characteristic-item" data-characteristic-index="{{ $index }}">
+                                <div class="characteristic-fields">
+                                    <input type="text"
+                                           name="characteristics[{{ $index }}][title]"
+                                           placeholder="Название характеристики"
+                                           value="{{ $characteristic['title'] ?? '' }}">
+                                    <textarea name="characteristics[{{ $index }}][value]"
+                                              placeholder="Описание характеристики"
+                                              rows="2">{{ $characteristic['value'] ?? '' }}</textarea>
+                                </div>
+                                <button type="button" class="btn-remove-characteristic" data-action="remove-characteristic" title="Удалить характеристику">&times;</button>
+                            </div>
+                        @empty
+                            <!-- Пустой контейнер, элементы добавляются скриптом -->
+                        @endforelse
+                    </div>
+                    <button type="button" class="btn btn-add-characteristic" data-role="add-characteristic">+ Добавить характеристику</button>
+                    @if($errors->has('characteristics'))
+                        <div class="error">{{ $errors->first('characteristics') }}</div>
+                    @endif
+                    @if($errors->has('characteristics.*.title'))
+                        <div class="error">{{ $errors->first('characteristics.*.title') }}</div>
+                    @endif
+                    @if($errors->has('characteristics.*.value'))
+                        <div class="error">{{ $errors->first('characteristics.*.value') }}</div>
+                    @endif
+                </div>
+
+                <div class="form-group">
+                    <label for="delivery_description">Доставка</label>
+                    <textarea id="delivery_description" name="delivery_description" style="min-height: 150px;" placeholder="Введите описание доставки для этого товара. Если оставить пустым, будет использовано общее описание доставки.">{!! old('delivery_description') !!}</textarea>
+                    <div class="help-text">Индивидуальное описание доставки для этого товара. Если оставить пустым, на сайте будет показано общее описание доставки. Можно использовать HTML-разметку (теги &lt;p&gt;, &lt;ul&gt;, &lt;li&gt; и т.д.).</div>
+                    @error('delivery_description')<div class="error">{{ $message }}</div>@enderror
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -165,54 +221,115 @@
             const galleryInput = document.getElementById('gallery_images');
             const previewGrid = document.querySelector('[data-role="gallery-preview"]');
 
-            if (!galleryInput || !previewGrid) {
-                return;
-            }
+            if (galleryInput && previewGrid) {
+                const renderPlaceholder = () => {
+                    previewGrid.innerHTML = '<div class="gallery-preview-item gallery-preview-placeholder">Пока ничего не выбрано. После выбора файлов здесь появится предпросмотр.</div>';
+                };
 
-            const renderPlaceholder = () => {
-                previewGrid.innerHTML = '<div class="gallery-preview-item gallery-preview-placeholder">Пока ничего не выбрано. После выбора файлов здесь появится предпросмотр.</div>';
-            };
+                const clearPreview = () => {
+                    previewGrid.innerHTML = '';
+                };
 
-            const clearPreview = () => {
-                previewGrid.innerHTML = '';
-            };
+                galleryInput.addEventListener('change', function (event) {
+                    const files = Array.from(event.target.files || []);
+                    clearPreview();
 
-            galleryInput.addEventListener('change', function (event) {
-                const files = Array.from(event.target.files || []);
-                clearPreview();
-
-                if (!files.length) {
-                    renderPlaceholder();
-                    return;
-                }
-
-                files.forEach((file) => {
-                    const item = document.createElement('div');
-                    item.className = 'gallery-preview-item';
-
-                    const caption = document.createElement('span');
-                    caption.textContent = file.name;
-
-                    if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = (loadEvent) => {
-                            const img = document.createElement('img');
-                            img.src = loadEvent.target.result;
-                            img.alt = file.name;
-                            item.appendChild(img);
-                            item.appendChild(caption);
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        item.innerHTML = '<span>Файл не является изображением</span>';
-                        item.appendChild(caption);
+                    if (!files.length) {
+                        renderPlaceholder();
+                        return;
                     }
 
-                    previewGrid.appendChild(item);
-                });
-            });
+                    files.forEach((file) => {
+                        const item = document.createElement('div');
+                        item.className = 'gallery-preview-item';
 
-            renderPlaceholder();
+                        const caption = document.createElement('span');
+                        caption.textContent = file.name;
+
+                        if (file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = (loadEvent) => {
+                                const img = document.createElement('img');
+                                img.src = loadEvent.target.result;
+                                img.alt = file.name;
+                                item.appendChild(img);
+                                item.appendChild(caption);
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            item.innerHTML = '<span>Файл не является изображением</span>';
+                            item.appendChild(caption);
+                        }
+
+                        previewGrid.appendChild(item);
+                    });
+                });
+
+                renderPlaceholder();
+            }
+
+            const characteristicsContainer = document.querySelector('[data-role="characteristics-container"]');
+            const addCharacteristicBtn = document.querySelector('[data-role="add-characteristic"]');
+
+            if (characteristicsContainer && addCharacteristicBtn) {
+                let characteristicIndex = characteristicsContainer.querySelectorAll('[data-characteristic-index]').length;
+
+                const addCharacteristic = (title = '', value = '') => {
+                    const item = document.createElement('div');
+                    item.className = 'characteristic-item';
+                    item.dataset.characteristicIndex = characteristicIndex;
+
+                    const fields = document.createElement('div');
+                    fields.className = 'characteristic-fields';
+
+                    const titleInput = document.createElement('input');
+                    titleInput.type = 'text';
+                    titleInput.name = `characteristics[${characteristicIndex}][title]`;
+                    titleInput.placeholder = 'Название характеристики';
+                    titleInput.value = title;
+
+                    const valueTextarea = document.createElement('textarea');
+                    valueTextarea.name = `characteristics[${characteristicIndex}][value]`;
+                    valueTextarea.placeholder = 'Описание характеристики';
+                    valueTextarea.rows = 2;
+                    valueTextarea.value = value;
+
+                    fields.appendChild(titleInput);
+                    fields.appendChild(valueTextarea);
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'btn-remove-characteristic';
+                    removeBtn.dataset.action = 'remove-characteristic';
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.title = 'Удалить характеристику';
+
+                    item.appendChild(fields);
+                    item.appendChild(removeBtn);
+                    characteristicsContainer.appendChild(item);
+
+                    characteristicIndex += 1;
+                };
+
+                if (characteristicIndex === 0) {
+                    addCharacteristic();
+                }
+
+                addCharacteristicBtn.addEventListener('click', () => addCharacteristic());
+
+                characteristicsContainer.addEventListener('click', (event) => {
+                    if (event.target.matches('[data-action="remove-characteristic"]')) {
+                        const item = event.target.closest('.characteristic-item');
+                        if (item) {
+                            item.remove();
+                        }
+
+                        if (!characteristicsContainer.querySelector('.characteristic-item')) {
+                            addCharacteristic();
+                        }
+                    }
+                });
+            }
         });
     </script>
 </body>

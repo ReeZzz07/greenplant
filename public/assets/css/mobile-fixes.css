@@ -564,3 +564,77 @@ body.owl-grab {
     }
 }
 
+/* Стили для табов товара */
+#productTabs {
+    border-bottom: 2px solid #e9ecef;
+}
+
+#productTabs .nav-link {
+    color: #666;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 12px 24px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#productTabs .nav-link:hover {
+    color: #82ae46;
+    border-bottom-color: rgba(130, 174, 70, 0.3);
+    background-color: transparent;
+}
+
+#productTabs .nav-link.active {
+    color: #82ae46;
+    border-bottom-color: #82ae46;
+    background-color: transparent;
+    font-weight: 600;
+}
+
+#productTabsContent {
+    padding: 20px 0;
+}
+
+#productTabsContent .tab-pane {
+    min-height: 100px;
+}
+
+#productTabsContent .table {
+    margin-bottom: 0;
+}
+
+#productTabsContent .table td {
+    padding: 12px 15px;
+    vertical-align: middle;
+    border: 1px solid #dee2e6 !important;
+}
+
+#productTabsContent .table td:first-child {
+    background-color: #f8f9fa;
+}
+
+@media (max-width: 767px) {
+    #productTabs .nav-link {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    #productTabsContent {
+        padding: 15px 0;
+    }
+    
+    #productTabsContent .table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+.char-name {
+    text-align-last: left;
+}
+
+#productTabsContent .table tbody tr td.char-name,
+#productTabsContent .table tbody tr td.char-desc {
+    border: transparent !important;
+    border-bottom: 1px solid #00000019 !important;
+}

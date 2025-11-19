@@ -54,6 +54,10 @@ class ProductController extends Controller
             'sku' => 'nullable|string|unique:products,sku',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
+            'characteristics' => 'nullable|array',
+            'characteristics.*.title' => 'nullable|string|max:255',
+            'characteristics.*.value' => 'nullable|string|max:2000',
+            'delivery_description' => 'nullable|string',
         ]);
 
         // Генерация slug если не указан
@@ -83,6 +87,8 @@ class ProductController extends Controller
         }
 
         unset($validated['gallery_images']);
+
+        $validated['characteristics'] = $this->formatCharacteristics($request->input('characteristics', []));
 
         Product::create($validated);
 
@@ -129,6 +135,10 @@ class ProductController extends Controller
             'sku' => 'nullable|string|unique:products,sku,' . $product->id,
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
+            'characteristics' => 'nullable|array',
+            'characteristics.*.title' => 'nullable|string|max:255',
+            'characteristics.*.value' => 'nullable|string|max:2000',
+            'delivery_description' => 'nullable|string',
         ]);
 
         // Генерация slug если не указан
@@ -190,6 +200,8 @@ class ProductController extends Controller
 
         unset($validated['gallery_images'], $validated['remove_images']);
 
+        $validated['characteristics'] = $this->formatCharacteristics($request->input('characteristics', []));
+
         $product->update($validated);
 
         return redirect()->route('admin.products.index')
@@ -199,6 +211,22 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    protected function formatCharacteristics(?array $items): array
+    {
+        return collect($items ?? [])
+            ->map(function ($item) {
+                return [
+                    'title' => trim($item['title'] ?? ''),
+                    'value' => trim($item['value'] ?? ''),
+                ];
+            })
+            ->filter(function ($item) {
+                return $item['title'] !== '' || $item['value'] !== '';
+            })
+            ->values()
+            ->all();
+    }
+
     public function destroy(Product $product)
     {
         // Удаление изображения

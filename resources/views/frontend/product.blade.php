@@ -128,13 +128,6 @@
                     <p>{{ $product->short_description }}</p>
                     @endif
 
-                    @if($product->description)
-                    <div style="margin-top: 20px;">
-                        <h4>Описание</h4>
-                        <p>{{ $product->description }}</p>
-                    </div>
-                    @endif
-
                     <div class="row mt-4">
                         <div class="col-md-12">
                             <p style="color: #000;">
@@ -160,6 +153,80 @@
                                     <button type="submit" class="btn btn-primary py-3 px-5 mr-2 add-to-cart-btn" style="border: none; cursor: pointer;">В корзину +</button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Tabs -->
+            <div class="row mt-5">
+                <div class="col-md-12 ftco-animate">
+                    <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="description" aria-selected="true">Описание</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="specifications-tab" data-toggle="tab" href="#specifications" role="tab" aria-controls="specifications" aria-selected="false">Характеристики</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="delivery-tab" data-toggle="tab" href="#delivery" role="tab" aria-controls="delivery" aria-selected="false">Доставка</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-4" id="productTabsContent">
+                        <!-- Описание -->
+                        <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                            @if($product->description)
+                                <p>{{ $product->description }}</p>
+                            @else
+                                <p class="text-muted">Описание товара отсутствует.</p>
+                            @endif
+                        </div>
+                        <!-- Характеристики -->
+                        <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                            @php
+                                $productCharacteristics = collect($product->characteristics ?? [])->filter(function ($item) {
+                                    return !empty($item['title']) || !empty($item['value']);
+                                });
+                            @endphp
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td class="char-name" style="width: 30%; font-weight: 600;">Категория</td>
+                                            <td class="char-desc">{{ $product->category->name }}</td>
+                                        </tr>
+                                        @if($product->sku)
+                                        <tr>
+                                            <td class="char-name" style="font-weight: 600;">Артикул</td>
+                                            <td class="char-desc">{{ $product->sku }}</td>
+                                        </tr>
+                                        @endif
+                                        @forelse($productCharacteristics as $characteristic)
+                                            <tr>
+                                                <td class="char-name" style="font-weight: 600;">{{ $characteristic['title'] ?? 'Характеристика' }}</td>
+                                                <td class="char-desc">{{ $characteristic['value'] ?? '' }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="2" class="text-muted">Дополнительные характеристики пока не заданы.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Доставка -->
+                        <div class="tab-pane fade" id="delivery" role="tabpanel" aria-labelledby="delivery-tab">
+                            @php
+                                $defaultDeliveryText = '<p>Доставляем растения во все регионы России. Бережно упаковываем растения и контролируем влажность почвы чтобы в пути минимизировать стресс для саженцев.</p>
+                                                        <ul class="info-list">
+                                                            <li>Доставка ТК по России — от 3 до 7 дней в стандартном режиме;</li>
+                                                            <li>Доставка частным транспортом до адреса по предварительной договорённости;</li>
+                                                            <li>Возможен самовывоз из питомника по предварительной договорённости.</li>
+                                                        </ul>';
+                                $deliveryContent = $product->delivery_description ? $product->delivery_description : $defaultDeliveryText;
+                            @endphp
+                            <div>{!! $deliveryContent !!}</div>
                         </div>
                     </div>
                 </div>

@@ -27,6 +27,8 @@ class Product extends Model
         'meta_title',
         'meta_description',
         'meta_keywords',
+        'characteristics',
+        'delivery_description',
     ];
 
     protected $casts = [
@@ -35,6 +37,7 @@ class Product extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'images' => 'array',
+        'characteristics' => 'array',
     ];
 
     public function category()
