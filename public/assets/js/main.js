@@ -270,12 +270,17 @@
 		 	e.preventDefault();
 
 		 	var hash = this.hash,
-		 			navToggler = $('.navbar-toggler');
-		 	$('html, body').animate({
-		    scrollTop: $(hash).offset().top
-		  }, 700, 'easeInOutExpo', function(){
-		    window.location.hash = hash;
-		  });
+		 			navToggler = $('.navbar-toggler'),
+		 			$target = $(hash);
+		 	
+		 	// Проверяем, существует ли элемент с таким hash
+		 	if ($target.length && $target.offset()) {
+		 		$('html, body').animate({
+		    		scrollTop: $target.offset().top
+		  		}, 700, 'easeInOutExpo', function(){
+		    		window.location.hash = hash;
+		  		});
+		 	}
 
 
 		  if ( navToggler.is(':visible') ) {

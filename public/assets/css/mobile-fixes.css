@@ -638,3 +638,16 @@ body.owl-grab {
     border: transparent !important;
     border-bottom: 1px solid #00000019 !important;
 }
+
+/* Text shadow для заголовков и подзаголовков в hero секциях */
+.hero-wrap h1,
+.hero-wrap h2,
+.hero-wrap p,
+.hero-wrap .bread,
+.hero-wrap .subheading,
+.hero-wrap .subtitle,
+.hero h1,
+.hero h2,
+.hero p {
+    text-shadow: 0px 0px 20px black !important;
+}
