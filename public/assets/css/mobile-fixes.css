@@ -651,3 +651,40 @@ body.owl-grab {
 .hero p {
     text-shadow: 0px 0px 20px black !important;
 }
+.owl-carousel.home-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.slider-text .text {
+    display: block;
+    max-width: 500px;
+}
+.slider-text{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+}
+
+/* Исправление для hero-wrap на мобильных устройствах */
+@media (max-width: 767px) {
+    .hero-wrap.hero-bread {
+        padding-top: 100px !important;
+        padding-bottom: 60px !important;
+        min-height: auto !important;
+    }
+    
+    .hero-wrap .slider-text {
+        height: auto !important;
+        min-height: 200px !important;
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+    }
+    
+    .hero-wrap .slider-text .row {
+        height: auto !important;
+        min-height: 200px !important;
+    }
+}

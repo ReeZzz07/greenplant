@@ -42,7 +42,7 @@ class AboutPageSettingController extends Controller
         // Загружаем фоновое изображение
         if ($request->hasFile('background_image')) {
             $data['background_image'] = $request->file('background_image')->store('about-page', 'public');
-        }
+    }
 
         // Загружаем изображение "О компании"
         if ($request->hasFile('about_image')) {
@@ -92,7 +92,7 @@ class AboutPageSettingController extends Controller
                 Storage::disk('public')->delete($setting->background_image);
             }
             $data['background_image'] = $request->file('background_image')->store('about-page', 'public');
-        }
+    }
 
         // Удаляем старое изображение "О компании", если загружено новое
         if ($request->hasFile('about_image')) {

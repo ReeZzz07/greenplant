@@ -62,9 +62,9 @@
         @endif
         <div class="home-slider owl-carousel" style="position: relative; z-index: 1;">
             @forelse($sliders as $slider)
-                <div class="slider-item js-fullheight">
+                <div class="slider-item">
                     <div class="container-fluid p-0">
-                        <div class="row d-md-flex no-gutters slider-text align-items-center justify-content-end" data-scrollax-parent="true">
+                        <div class="row slider-text" data-scrollax-parent="true">
                             @if($slider->image)
                                 <img
                                     class="one-third order-md-last img-fluid"
@@ -78,8 +78,7 @@
                                     "
                                 >
                             @endif
-                            <div class="one-forth d-flex align-items-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
-                                <div class="text">
+                                <div class="text" data-scrollax=" properties: { translateY: '70%' }">
                                     @if($slider->subtitle)
                                         <span class="subheading">{{ $slider->subtitle }}</span>
                                     @endif
@@ -93,13 +92,12 @@
                                         @endif
                                     </div>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             @empty
                 {{-- Fallback to default slider if no sliders in database --}}
-                <div class="slider-item js-fullheight">
+                <div class="slider-item">
                     <div class="container-fluid p-0">
                         <div class="row d-md-flex no-gutters slider-text align-items-center justify-content-end" data-scrollax-parent="true">
                             <img class="one-third order-md-last img-fluid" src="{{ asset('assets/images/bg_1.png') }}" alt="">

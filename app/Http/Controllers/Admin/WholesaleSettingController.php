@@ -54,7 +54,7 @@ class WholesaleSettingController extends Controller
         // Загружаем фоновое изображение
         if ($request->hasFile('background_image')) {
             $data['background_image'] = $request->file('background_image')->store('wholesale-page', 'public');
-        }
+    }
 
         // Преобразуем JSON строки в массивы
         if ($request->has('advantages') && !empty($request->advantages)) {
@@ -122,7 +122,7 @@ class WholesaleSettingController extends Controller
                 Storage::disk('public')->delete($setting->background_image);
             }
             $data['background_image'] = $request->file('background_image')->store('wholesale-page', 'public');
-        }
+    }
 
         // Преобразуем JSON строки в массивы
         if ($request->has('advantages') && !empty($request->advantages)) {

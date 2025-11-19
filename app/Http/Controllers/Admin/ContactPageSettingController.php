@@ -93,7 +93,7 @@ class ContactPageSettingController extends Controller
                 Storage::disk('public')->delete($setting->background_image);
             }
             $data['background_image'] = $request->file('background_image')->store('contact-page', 'public');
-        }
+    }
 
         // Если это активная настройка, деактивируем остальные
         if ($request->has('is_active') && $request->is_active) {

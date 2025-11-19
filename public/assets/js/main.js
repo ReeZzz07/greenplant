@@ -149,6 +149,304 @@
 	  console.log('show');
 	});
 
+	// Раздельная логика для мобильного меню и dropdown
+	// Инициализация при загрузке DOM
+	(function() {
+		function disableBootstrapDropdown() {
+			if ($(window).width() < 992) {
+				$('.navbar-collapse .dropdown-toggle').each(function() {
+					var $toggle = $(this);
+					// Полностью отключаем Bootstrap dropdown
+					$toggle.removeAttr('data-toggle');
+					$toggle.off('click.bs.dropdown');
+					$toggle.off('click');
+					// Удаляем все обработчики Bootstrap
+					if ($toggle.data('bs.dropdown')) {
+						var dropdownInstance = $toggle.data('bs.dropdown');
+						if (dropdownInstance && dropdownInstance.dispose) {
+							dropdownInstance.dispose();
+						}
+						$toggle.data('bs.dropdown', null);
+					}
+					// Удаляем все обработчики событий
+					$toggle.off();
+				});
+				
+				// Также отключаем обработчики на dropdown-menu
+				$('.navbar-collapse .dropdown-menu').each(function() {
+					var $menu = $(this);
+					$menu.off('click.bs.dropdown');
+				});
+			}
+		}
+		
+		// Отключаем сразу при загрузке
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', disableBootstrapDropdown);
+		} else {
+			disableBootstrapDropdown();
+		}
+		
+		// Также отключаем при готовности jQuery
+		$(document).ready(function() {
+			disableBootstrapDropdown();
+			// Повторно отключаем после небольшой задержки, чтобы убедиться, что Bootstrap инициализировался
+			setTimeout(disableBootstrapDropdown, 100);
+		});
+		
+		// При изменении размера окна
+		$(window).on('resize', function() {
+			if ($(window).width() < 992) {
+				disableBootstrapDropdown();
+			} else {
+				// Восстанавливаем на десктопе
+				$('.navbar-collapse .dropdown-toggle').each(function() {
+					$(this).attr('data-toggle', 'dropdown');
+				});
+			}
+		});
+	})();
+	
+	// ЛОГИКА ОТКРЫТИЯ/ЗАКРЫТИЯ DROPDOWN (независимо от navbar-collapse)
+	var lastDropdownElement = null;
+	var isProcessingDropdown = false;
+	var touchStartTime = 0;
+	var lastTouchedToggle = null;
+	
+	// Единая функция для обработки открытия/закрытия dropdown
+	function toggleMobileDropdown(e, $dropdownToggle) {
+		if (window.innerWidth >= 992) return;
+		
+		isProcessingDropdown = true;
+		
+		var $dropdown = $dropdownToggle.closest('.dropdown');
+		var $menu = $dropdown.find('.dropdown-menu');
+		var isExpanded = $dropdown.hasClass('show') || $menu.hasClass('show');
+		
+		// Переключаем состояние dropdown
+		if (isExpanded) {
+			// Закрываем dropdown
+			$dropdown.removeClass('show');
+			$menu.removeClass('show');
+			$dropdownToggle.attr('aria-expanded', 'false');
+			lastDropdownElement = null;
+		} else {
+			// Закрываем другие открытые dropdown
+			$('.navbar-collapse .dropdown').not($dropdown).removeClass('show');
+			$('.navbar-collapse .dropdown-menu').not($dropdown.find('.dropdown-menu')).removeClass('show');
+			$('.navbar-collapse .dropdown-toggle').not($dropdownToggle[0]).attr('aria-expanded', 'false');
+			
+			// Открываем текущий dropdown
+			$dropdown.addClass('show');
+			$menu.addClass('show');
+			$dropdownToggle.attr('aria-expanded', 'true');
+			lastDropdownElement = $dropdown[0];
+		}
+		
+		// Сбрасываем флаг через небольшую задержку
+		setTimeout(function() {
+			isProcessingDropdown = false;
+		}, 300);
+	}
+	
+	// Обработчик touchstart для мобильных устройств
+	document.addEventListener('touchstart', function(e) {
+		if (window.innerWidth < 992) {
+			var $target = $(e.target);
+			var $dropdownToggle = $target.closest('.navbar-collapse .dropdown-toggle');
+			
+			if ($dropdownToggle.length) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+				
+				touchStartTime = Date.now();
+				lastTouchedToggle = $dropdownToggle[0];
+				
+				toggleMobileDropdown(e, $dropdownToggle);
+				
+				return false;
+			}
+		}
+	}, true);
+	
+	// Обработчик click - блокируем все события Bootstrap
+	document.addEventListener('click', function(e) {
+		if (window.innerWidth < 992) {
+			var $target = $(e.target);
+			var $dropdownToggle = $target.closest('.navbar-collapse .dropdown-toggle');
+			var $clickedDropdown = $target.closest('.navbar-collapse .dropdown');
+			var $clickedMenu = $target.closest('.navbar-collapse .dropdown-menu');
+			var $dropdownItem = $target.closest('.navbar-collapse .dropdown-item');
+			
+			// Если клик был на ссылку внутри dropdown, разрешаем навигацию
+			if ($dropdownItem.length) {
+				// Закрываем dropdown после клика на ссылку
+				var $dropdown = $dropdownItem.closest('.dropdown');
+				if ($dropdown.length) {
+					$dropdown.removeClass('show');
+					$dropdown.find('.dropdown-menu').removeClass('show');
+					$dropdown.find('.dropdown-toggle').attr('aria-expanded', 'false');
+					lastDropdownElement = null;
+				}
+				// Разрешаем событию пройти для навигации
+				return;
+			}
+			
+			// Если это тот же toggle, который был обработан через touchstart, блокируем click
+			if (lastTouchedToggle && $dropdownToggle.length && $dropdownToggle[0] === lastTouchedToggle) {
+				var timeSinceTouch = Date.now() - touchStartTime;
+				// Если прошло меньше 500мс после touchstart, блокируем click
+				if (timeSinceTouch < 500) {
+					e.preventDefault();
+					e.stopPropagation();
+					e.stopImmediatePropagation();
+					return false;
+				}
+			}
+			
+			// Если клик был внутри открытого dropdown (но не на toggle и не на ссылку), не закрываем его
+			if (lastDropdownElement && $clickedDropdown.length && $clickedDropdown[0] === lastDropdownElement && !$dropdownToggle.length && !$dropdownItem.length) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+				return false;
+			}
+			
+			// Если клик был на dropdown-menu (но не на ссылку), блокируем все события
+			if ($clickedMenu.length && !$dropdownItem.length) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+				return false;
+			}
+			
+			// Если клик был на toggle
+			if ($dropdownToggle.length) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+				
+				// Если dropdown еще обрабатывается, не делаем ничего
+				if (isProcessingDropdown) {
+					return false;
+				}
+				
+				// Если это тот же toggle, который был обработан через touchstart, не обрабатываем
+				if (lastTouchedToggle && $dropdownToggle[0] === lastTouchedToggle) {
+					var timeSinceTouch = Date.now() - touchStartTime;
+					if (timeSinceTouch < 500) {
+						return false;
+					}
+				}
+				
+				toggleMobileDropdown(e, $dropdownToggle);
+				
+				return false;
+			}
+		}
+	}, true);
+	
+	// Блокируем все события Bootstrap dropdown на мобильных
+	// Отключаем до инициализации Bootstrap
+	$(document).ready(function() {
+		if ($(window).width() < 992) {
+			$(document).off('click.bs.dropdown.data-api', '.navbar-collapse .dropdown-toggle');
+			$(document).off('click.bs.dropdown.data-api');
+			
+			// Также отключаем через делегирование
+			$('.navbar-collapse').off('click.bs.dropdown.data-api', '.dropdown-toggle');
+		}
+	});
+	
+	// Отключаем сразу, если DOM уже загружен
+	if (document.readyState !== 'loading') {
+		$(document).off('click.bs.dropdown.data-api', '.navbar-collapse .dropdown-toggle');
+		$(document).off('click.bs.dropdown.data-api');
+		$('.navbar-collapse').off('click.bs.dropdown.data-api', '.dropdown-toggle');
+	}
+	
+	// Предотвращаем закрытие dropdown при клике внутри него (но не на ссылках)
+	$(document).on('click', '.navbar-collapse .dropdown-menu', function(e) {
+		if ($(window).width() < 992) {
+			var $target = $(e.target);
+			var $dropdownItem = $target.closest('.dropdown-item');
+			
+			// Если клик был на ссылку, разрешаем навигацию
+			if ($dropdownItem.length) {
+				// Закрываем dropdown, но разрешаем событию пройти
+				var $dropdown = $(this).closest('.dropdown');
+				$dropdown.removeClass('show');
+				$dropdown.find('.dropdown-menu').removeClass('show');
+				$dropdown.find('.dropdown-toggle').attr('aria-expanded', 'false');
+				lastDropdownElement = null;
+				// Не блокируем событие, чтобы ссылка сработала
+				return;
+			}
+			
+			// Если клик был не на ссылку, блокируем событие
+			e.preventDefault();
+			e.stopPropagation();
+			e.stopImmediatePropagation();
+			return false;
+		}
+	});
+
+	// Закрытие dropdown при клике на dropdown-item (дублируем логику для надежности)
+	$(document).on('click', '.navbar-collapse .dropdown-item', function(e) {
+		if ($(window).width() < 992) {
+			// Закрываем только dropdown, но разрешаем навигацию
+			var $dropdown = $(this).closest('.dropdown');
+			$dropdown.removeClass('show');
+			$dropdown.find('.dropdown-menu').removeClass('show');
+			$dropdown.find('.dropdown-toggle').attr('aria-expanded', 'false');
+			lastDropdownElement = null;
+			// Не блокируем событие, чтобы ссылка сработала
+		}
+	});
+	
+	// ЛОГИКА ОТКРЫТИЯ/ЗАКРЫТИЯ NAVBAR-COLLAPSE (независимо от dropdown)
+	// Перехватываем событие закрытия navbar-collapse
+	var lastClickedElement = null;
+	
+	// Сохраняем последний кликнутый элемент
+	$(document).on('mousedown touchstart', '.navbar-collapse .dropdown-toggle, .navbar-collapse .dropdown-menu', function(e) {
+		if ($(window).width() < 992) {
+			lastClickedElement = e.target;
+		}
+	});
+	
+	// Перехватываем событие закрытия navbar-collapse
+	$('#ftco-nav').on('hide.bs.collapse', function(e) {
+		if ($(window).width() < 992) {
+			// Проверяем, был ли клик на dropdown toggle или внутри dropdown
+			var $clickedElement = lastClickedElement ? $(lastClickedElement) : $(document.activeElement);
+			
+			if ($clickedElement.closest('.navbar-collapse .dropdown-toggle').length || 
+			    $clickedElement.closest('.navbar-collapse .dropdown-menu').length ||
+			    $clickedElement.hasClass('dropdown-toggle') ||
+			    $clickedElement.closest('.dropdown').length) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+				lastClickedElement = null;
+				return false;
+			}
+			lastClickedElement = null;
+		}
+	});
+	
+	// Предотвращаем закрытие navbar-collapse при клике на dropdown элементы
+	$(document).on('click', '.navbar-collapse .dropdown, .navbar-collapse .dropdown-menu', function(e) {
+		if ($(window).width() < 992) {
+			// Если это не клик на dropdown-item, предотвращаем закрытие меню
+			if (!$(e.target).closest('.dropdown-item').length && !$(e.target).hasClass('dropdown-item')) {
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+			}
+		}
+	});
+
 	// scroll
 	var scrollWindow = function() {
 		var ticking = false;
