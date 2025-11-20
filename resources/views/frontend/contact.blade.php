@@ -93,6 +93,18 @@
                             <input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response">
                             @error('cf-turnstile-response')<div style="color: #dc3545; font-size: 13px; margin-top: 5px;">{{ $message }}</div>@enderror
                         </div>
+                        <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
+                            @php
+                                $defaultConsentText = 'Нажимая кнопку "Отправить сообщение", Вы соглашаетесь с условиями 
+                                <a href="' . route('privacy') . '" target="_blank" style="color: #82ae46; text-decoration: underline;">Политики конфиденциальности</a> 
+                                и 
+                                <a href="' . route('terms') . '" target="_blank" style="color: #82ae46; text-decoration: underline;">Пользовательским соглашением</a>';
+                                $consentText = $contactSettings && $contactSettings->consent_text ? $contactSettings->consent_text : $defaultConsentText;
+                            @endphp
+                            <div style="font-size: 13px; color: #666; line-height: 1.6; margin: 0;">
+                                {!! $consentText !!}
+                            </div>
+                        </div>
                         <div class="form-group">
                             <input type="submit" value="Отправить сообщение" class="btn btn-primary py-3 px-5" id="contact-submit-btn">
                         </div>

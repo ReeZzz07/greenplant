@@ -37,6 +37,7 @@ class ContactPageSettingController extends Controller
             'map_embed_code' => 'nullable|string',
             'contact_section_title' => 'nullable|string|max:255',
             'contact_section_content' => 'nullable|string',
+            'consent_text' => 'nullable|string',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -81,6 +82,7 @@ class ContactPageSettingController extends Controller
             'map_embed_code' => 'nullable|string',
             'contact_section_title' => 'nullable|string|max:255',
             'contact_section_content' => 'nullable|string',
+            'consent_text' => 'nullable|string',
             'is_active' => 'nullable|boolean',
         ]);
 

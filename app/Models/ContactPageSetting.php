@@ -24,6 +24,7 @@ class ContactPageSetting extends Model
         'map_embed_code',
         'contact_section_title',
         'contact_section_content',
+        'consent_text',
         'is_active',
     ];
 
