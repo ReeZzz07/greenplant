@@ -45,6 +45,8 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/wholesale', [HomeController::class, 'wholesale'])->name('wholesale');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/info', [HomeController::class, 'info'])->name('info');
+Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,1') // Защита от спама: 5 попыток в минуту
     ->name('contact.send');

@@ -34,6 +34,8 @@ class SitemapController extends Controller
             ['route' => 'blog', 'priority' => '0.8'],
             ['route' => 'wholesale', 'priority' => '0.8'],
             ['route' => 'contact', 'priority' => '0.6'],
+            ['route' => 'privacy', 'priority' => '0.5'],
+            ['route' => 'terms', 'priority' => '0.5'],
         ];
         
         foreach ($pages as $page) {

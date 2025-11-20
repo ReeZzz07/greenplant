@@ -34,9 +34,14 @@ class SettingController extends Controller
         ]);
 
         foreach ($validated['settings'] as $setting) {
+            $group = $this->determineSettingGroup($setting['key']);
             Setting::updateOrCreate(
                 ['key' => $setting['key']],
-                ['value' => $setting['value'] ?? '']
+                [
+                    'value' => $setting['value'] ?? '',
+                    'type' => $group === 'legal' ? 'textarea' : 'string',
+                    'group' => $group
+                ]
             );
         }
 
@@ -70,6 +75,36 @@ class SettingController extends Controller
 
         return redirect()->route('admin.settings.index')
             ->with('success', 'Настройки успешно обновлены');
+    }
+
+    /**
+     * Определяет группу настройки по ключу
+     */
+    private function determineSettingGroup($key)
+    {
+        if (in_array($key, ['privacy_policy_content', 'terms_of_service_content'])) {
+            return 'legal';
+        }
+        
+        if (strpos($key, 'privacy') !== false || strpos($key, 'terms') !== false || strpos($key, 'policy') !== false) {
+            return 'policies';
+        }
+        
+        if (strpos($key, 'company_') !== false) {
+            return 'legal';
+        }
+        
+        if (strpos($key, 'turnstile') !== false) {
+            return 'integrations';
+        }
+        
+        // Определяем группу по существующей настройке
+        $existing = Setting::where('key', $key)->first();
+        if ($existing && $existing->group) {
+            return $existing->group;
+        }
+        
+        return 'general';
     }
 }
 

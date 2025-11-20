@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Настройки - GreenPlant</title>
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #333; }
@@ -467,12 +468,48 @@
                     @empty
                     <p style="color: #999;">Интеграции пока не настроены</p>
                     @endforelse
+
+                    <h3 class="section-title" style="margin-top: 40px;">🔒 Cloudflare Turnstile</h3>
+                    <div class="form-group">
+                        <label for="cloudflare_turnstile_site_key">
+                            Публичный ключ (Site Key)
+                        </label>
+                        <input type="text" id="cloudflare_turnstile_site_key" name="settings[{{ $index }}][value]" value="{{ \App\Models\Setting::get('cloudflare_turnstile_site_key', '') }}" placeholder="Введите публичный ключ Turnstile">
+                        <input type="hidden" name="settings[{{ $index }}][key]" value="cloudflare_turnstile_site_key">
+                        <div class="help-text">Публичный ключ из панели Cloudflare. Используется для отображения капчи на сайте.</div>
+                        @php $index++; @endphp
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cloudflare_turnstile_secret_key">
+                            Секретный ключ (Secret Key)
+                        </label>
+                        <input type="text" id="cloudflare_turnstile_secret_key" name="settings[{{ $index }}][value]" value="{{ \App\Models\Setting::get('cloudflare_turnstile_secret_key', '') }}" placeholder="Введите секретный ключ Turnstile">
+                        <input type="hidden" name="settings[{{ $index }}][key]" value="cloudflare_turnstile_secret_key">
+                        <div class="help-text">Секретный ключ из панели Cloudflare. Используется для проверки капчи на сервере. Никому не передавайте этот ключ!</div>
+                        @php $index++; @endphp
+                    </div>
+
+                    <div style="background: #e7f3ff; padding: 20px; border-radius: 10px; border-left: 4px solid #2196F3; margin-top: 20px;">
+                        <h4 style="margin: 0 0 10px 0; color: #1976D2;">📖 Как получить ключи Cloudflare Turnstile?</h4>
+                        <ol style="margin: 0; padding-left: 20px; color: #333;">
+                            <li>Зайдите в <a href="https://dash.cloudflare.com/" target="_blank" style="color: #2196F3;">панель Cloudflare</a></li>
+                            <li>Перейдите в раздел "Turnstile" (или создайте новый сайт)</li>
+                            <li>Создайте виджет Turnstile</li>
+                            <li>Скопируйте <strong>Site Key</strong> и <strong>Secret Key</strong></li>
+                            <li>Вставьте их в поля выше</li>
+                        </ol>
+                        <p style="margin: 10px 0 0 0; color: #666; font-size: 13px;">
+                            <strong>Важно:</strong> Cloudflare Turnstile полностью бесплатен. Если ключи не заполнены, форма контактов будет работать без проверки капчи.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Tab: Юридическое -->
                 <div class="tab-content" id="tab-legal">
                     <h3 class="section-title">⚖️ Юридическая информация</h3>
                     @forelse($settings['legal'] ?? [] as $setting)
+                        @continue(in_array($setting->key, ['privacy_policy_content', 'terms_of_service_content']))
                     <div class="form-group">
                         <label for="{{ $setting->key }}">
                             @if($setting->key == 'company_inn') ИНН
@@ -483,7 +520,7 @@
                             @endif
                         </label>
                         @if($setting->type == 'textarea')
-                            <textarea id="{{ $setting->key }}" name="settings[{{ $index }}][value]">{{ $setting->value }}</textarea>
+                            <textarea id="{{ $setting->key }}" name="settings[{{ $index }}][value]" class="no-tinymce">{{ $setting->value }}</textarea>
                         @else
                             <input type="{{ $setting->type ?? 'text' }}" id="{{ $setting->key }}" name="settings[{{ $index }}][value]" value="{{ $setting->value }}">
                         @endif
@@ -496,10 +533,11 @@
 
                     <h3 class="section-title" style="margin-top: 40px;">📄 Политики и документы</h3>
                     @forelse($settings['policies'] ?? [] as $setting)
+                        @continue(in_array($setting->key, ['privacy_policy_content', 'terms_of_service_content']))
                     <div class="form-group">
                         <label for="{{ $setting->key }}">
-                            @if($setting->key == 'privacy_policy_url') Политика конфиденциальности
-                            @elseif($setting->key == 'terms_of_service_url') Пользовательское соглашение
+                            @if($setting->key == 'privacy_policy_url') Политика конфиденциальности (URL)
+                            @elseif($setting->key == 'terms_of_service_url') Пользовательское соглашение (URL)
                             @elseif($setting->key == 'return_policy_url') Политика возврата
                             @else {{ ucfirst(str_replace('_', ' ', $setting->key)) }}
                             @endif
@@ -511,6 +549,34 @@
                     @empty
                     <p style="color: #999;">Политики пока не добавлены</p>
                     @endforelse
+
+                    <div class="form-group" style="margin-top: 30px;">
+                        <label for="privacy_policy_content">
+                            📋 Политика конфиденциальности (контент)
+                        </label>
+                        <textarea id="privacy_policy_content" name="settings[{{ $index }}][value]">{{ \App\Models\Setting::get('privacy_policy_content', '') }}</textarea>
+                        <input type="hidden" name="settings[{{ $index }}][key]" value="privacy_policy_content">
+                        <div class="help-text">
+                            Контент страницы "Политика конфиденциальности". Если не заполнено, будет использован текст по умолчанию.
+                            <br>
+                            <a href="{{ route('privacy') }}" target="_blank" style="color: #667eea;">Посмотреть страницу →</a>
+                        </div>
+                        @php $index++; @endphp
+                    </div>
+
+                    <div class="form-group" style="margin-top: 30px;">
+                        <label for="terms_of_service_content">
+                            📋 Пользовательское соглашение (контент)
+                        </label>
+                        <textarea id="terms_of_service_content" name="settings[{{ $index }}][value]">{{ \App\Models\Setting::get('terms_of_service_content', '') }}</textarea>
+                        <input type="hidden" name="settings[{{ $index }}][key]" value="terms_of_service_content">
+                        <div class="help-text">
+                            Контент страницы "Пользовательское соглашение". Если не заполнено, будет использован текст по умолчанию.
+                            <br>
+                            <a href="{{ route('terms') }}" target="_blank" style="color: #667eea;">Посмотреть страницу →</a>
+                        </div>
+                        @php $index++; @endphp
+                    </div>
                 </div>
 
                 <!-- Tab: Каталог -->
@@ -647,6 +713,73 @@
                 button.classList.add('active');
                 document.getElementById('tab-' + tabId).classList.add('active');
             });
+        });
+
+        // Инициализация TinyMCE для полей политики и соглашения
+        document.addEventListener('DOMContentLoaded', function() {
+            // Функция для инициализации TinyMCE редактора
+            function initTinyMCE(selector) {
+                // Проверяем, что элемент существует и еще не инициализирован
+                const element = document.querySelector(selector);
+                if (!element) {
+                    console.log('Element not found: ' + selector);
+                    return;
+                }
+                
+                // Проверяем, не инициализирован ли уже редактор для этого элемента
+                const editorId = element.id;
+                if (tinymce.get(editorId)) {
+                    console.log('TinyMCE already initialized for: ' + selector);
+                    return;
+                }
+                
+                tinymce.init({
+                    selector: selector,
+                    height: 400,
+                    menubar: 'file edit view insert format tools table help',
+                    readonly: false,
+                    promotion: false,
+                    branding: false,
+                    plugins: [
+                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                        'anchor', 'searchreplace', 'visualblocks', 'visualchars', 'code', 'fullscreen',
+                        'insertdatetime', 'media', 'table', 'emoticons', 'codesample', 'help', 'wordcount',
+                        'pagebreak', 'nonbreaking', 'directionality', 'quickbars'
+                    ],
+                    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | ' +
+                             'forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | ' +
+                             'bullist numlist outdent indent | link image media table | ' +
+                             'code visualblocks visualchars codesample | emoticons charmap | ' +
+                             'searchreplace fullscreen preview | pagebreak nonbreaking anchor | ' +
+                             'insertdatetime | help',
+                    toolbar_mode: 'sliding',
+                    content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px }',
+                    setup: function(editor) {
+                        editor.on('init', function() {
+                            console.log('TinyMCE initialized successfully for: ' + selector);
+                        });
+                    }
+                });
+            }
+
+            // Инициализация редакторов только для нужных полей
+            // Используем точные ID, чтобы избежать конфликтов
+            setTimeout(function() {
+                initTinyMCE('#privacy_policy_content');
+                initTinyMCE('#terms_of_service_content');
+            }, 100);
+
+            // Инициализация редакторов при переключении на вкладку "Юридическое"
+            const legalTabButton = document.querySelector('[data-tab="legal"]');
+            if (legalTabButton) {
+                legalTabButton.addEventListener('click', function() {
+                    setTimeout(function() {
+                        // Инициализируем только если они еще не инициализированы
+                        initTinyMCE('#privacy_policy_content');
+                        initTinyMCE('#terms_of_service_content');
+                    }, 150);
+                });
+            }
         });
     </script>
 </body>

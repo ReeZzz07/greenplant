@@ -70,7 +70,7 @@
 
             <div class="row block-9">
                 <div class="col-md-6 order-md-last d-flex">
-                    <form action="{{ route('contact.send') }}" method="POST" class="bg-white p-5 contact-form">
+                    <form action="{{ route('contact.send') }}" method="POST" class="bg-white contact-form">
                         @csrf
                         <div class="form-group">
                             <input type="text" name="name" class="form-control" placeholder="Ваше имя *" value="{{ old('name') }}" required>
@@ -89,7 +89,12 @@
                             @error('message')<div style="color: #dc3545; font-size: 13px; margin-top: 5px;">{{ $message }}</div>@enderror
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Отправить сообщение" class="btn btn-primary py-3 px-5">
+                            <div id="cf-turnstile-widget"></div>
+                            <input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response">
+                            @error('cf-turnstile-response')<div style="color: #dc3545; font-size: 13px; margin-top: 5px;">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Отправить сообщение" class="btn btn-primary py-3 px-5" id="contact-submit-btn">
                         </div>
                     </form>
                 </div>
@@ -166,5 +171,143 @@
             });
         </script>
     @endif
+@endsection
+
+@section('scripts')
+<script>
+    var turnstileWidgetId = null;
+    var siteKey = '{{ \App\Models\Setting::get("cloudflare_turnstile_site_key", "") }}';
+    var isLocalhost = window.location.hostname === 'localhost' || 
+                      window.location.hostname === '127.0.0.1' || 
+                      window.location.hostname.endsWith('.local') ||
+                      window.location.hostname.includes('192.168.') ||
+                      window.location.hostname.includes('10.0.') ||
+                      window.location.hostname.includes('172.');
+
+    function onTurnstileSuccess(token) {
+        // Сохраняем токен в скрытое поле
+        document.getElementById('cf-turnstile-response').value = token;
+        // Разрешаем отправку формы
+        if (document.getElementById('contact-submit-btn')) {
+            document.getElementById('contact-submit-btn').disabled = false;
+        }
+    }
+
+    function onTurnstileExpired() {
+        // Токен истек, очищаем поле и обновляем виджет
+        document.getElementById('cf-turnstile-response').value = '';
+        if (document.getElementById('contact-submit-btn')) {
+            document.getElementById('contact-submit-btn').disabled = true;
+        }
+        // Обновляем виджет
+        if (window.turnstile && turnstileWidgetId !== null) {
+            window.turnstile.reset(turnstileWidgetId);
+        }
+    }
+
+    function onTurnstileError(error) {
+        // Ошибка загрузки капчи - на локальном домене это нормально
+        if (isLocalhost) {
+            console.log('Turnstile не работает на локальном домене, пропускаем проверку');
+            document.getElementById('cf-turnstile-response').value = 'localhost';
+            if (document.getElementById('contact-submit-btn')) {
+                document.getElementById('contact-submit-btn').disabled = false;
+            }
+            return;
+        }
+        console.error('Turnstile error:', error);
+        document.getElementById('cf-turnstile-response').value = '';
+        if (document.getElementById('contact-submit-btn')) {
+            document.getElementById('contact-submit-btn').disabled = true;
+        }
+    }
+
+    function initTurnstile() {
+        // На локальном домене не инициализируем Turnstile
+        if (isLocalhost) {
+            document.getElementById('cf-turnstile-response').value = 'localhost';
+            return;
+        }
+
+        if (!siteKey || siteKey === '') {
+            // Если ключ не настроен, разрешаем отправку формы без капчи
+            document.getElementById('cf-turnstile-response').value = 'no-key';
+            return;
+        }
+
+        // Проверяем, что библиотека Turnstile загружена
+        if (typeof window.turnstile === 'undefined') {
+            console.error('Turnstile library not loaded');
+            document.getElementById('cf-turnstile-response').value = 'no-key';
+            return;
+        }
+
+        // Блокируем кнопку отправки до прохождения капчи
+        if (document.getElementById('contact-submit-btn')) {
+            document.getElementById('contact-submit-btn').disabled = true;
+        }
+
+        try {
+            // Инициализируем Turnstile виджет
+            turnstileWidgetId = window.turnstile.render('#cf-turnstile-widget', {
+                sitekey: siteKey,
+                callback: onTurnstileSuccess,
+                'expired-callback': onTurnstileExpired,
+                'error-callback': onTurnstileError,
+                theme: 'auto',
+                language: 'ru'
+            });
+        } catch (error) {
+            console.error('Error initializing Turnstile:', error);
+            document.getElementById('cf-turnstile-response').value = 'no-key';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // На локальном домене не загружаем Turnstile
+        if (isLocalhost) {
+            document.getElementById('cf-turnstile-response').value = 'localhost';
+            return;
+        }
+
+        // Загружаем скрипт Turnstile только на продакшн домене
+        if (siteKey && siteKey !== '') {
+            var script = document.createElement('script');
+            script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+            script.defer = true;
+            script.onload = function() {
+                // Ждем немного после загрузки скрипта
+                setTimeout(function() {
+                    if (typeof window.turnstile !== 'undefined') {
+                        initTurnstile();
+                    } else {
+                        console.error('Turnstile library failed to load');
+                        document.getElementById('cf-turnstile-response').value = 'no-key';
+                    }
+                }, 100);
+            };
+            script.onerror = function() {
+                console.error('Failed to load Turnstile script');
+                document.getElementById('cf-turnstile-response').value = 'no-key';
+            };
+            document.head.appendChild(script);
+        } else {
+            document.getElementById('cf-turnstile-response').value = 'no-key';
+        }
+
+        // Проверка токена перед отправкой формы
+        var contactForm = document.querySelector('.contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                var token = document.getElementById('cf-turnstile-response').value;
+                if (token !== 'no-key' && token !== 'localhost' && (!token || token === '')) {
+                    e.preventDefault();
+                    alert('Пожалуйста, пройдите проверку безопасности');
+                    return false;
+                }
+            });
+        }
+    });
+</script>
 @endsection
 

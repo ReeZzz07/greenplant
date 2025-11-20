@@ -261,7 +261,14 @@
             </div>
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <p>Copyright &copy;{{ now()->year }} GreenPlant. Все права защищены.</p>
+                    <p>
+                        Copyright &copy;{{ now()->year }} GreenPlant. Все права защищены.
+                        <span class="ml-3">
+                            <a href="{{ route('privacy') }}" class="text-white-50" style="text-decoration: underline;">Политика конфиденциальности</a>
+                            <span class="mx-2">|</span>
+                            <a href="{{ route('terms') }}" class="text-white-50" style="text-decoration: underline;">Пользовательское соглашение</a>
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>

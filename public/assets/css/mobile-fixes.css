@@ -688,3 +688,24 @@ body.owl-grab {
         min-height: 200px !important;
     }
 }
+
+/* Footer styles */
+.ftco-footer .row:last-child p {
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .ftco-footer .row:last-child p {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+    
+    .ftco-footer .row:last-child p span {
+        display: block;
+        margin-top: 0.5rem;
+    }
+    
+    .ftco-footer .row:last-child p span.mx-2 {
+        display: none;
+    }
+}
