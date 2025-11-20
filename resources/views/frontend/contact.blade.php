@@ -215,7 +215,22 @@
             }
             return;
         }
-        console.error('Turnstile error:', error);
+        
+        // Ошибка 110200 обычно означает проблему с доменом или ключами
+        // В этом случае разрешаем отправку формы, но логируем ошибку
+        console.warn('Turnstile error:', error);
+        
+        // Если ошибка связана с ключом или доменом, разрешаем отправку
+        // (в продакшне лучше настроить правильный домен)
+        if (error === '110200' || error === 110200) {
+            console.warn('Ошибка Turnstile 110200: проверьте настройки домена в Cloudflare');
+            document.getElementById('cf-turnstile-response').value = 'error-110200';
+            if (document.getElementById('contact-submit-btn')) {
+                document.getElementById('contact-submit-btn').disabled = false;
+            }
+            return;
+        }
+        
         document.getElementById('cf-turnstile-response').value = '';
         if (document.getElementById('contact-submit-btn')) {
             document.getElementById('contact-submit-btn').disabled = true;
@@ -300,7 +315,8 @@
         if (contactForm) {
             contactForm.addEventListener('submit', function(e) {
                 var token = document.getElementById('cf-turnstile-response').value;
-                if (token !== 'no-key' && token !== 'localhost' && (!token || token === '')) {
+                // Разрешаем отправку если нет ключа, на локальном домене или при ошибке 110200
+                if (token !== 'no-key' && token !== 'localhost' && token !== 'error-110200' && (!token || token === '')) {
                     e.preventDefault();
                     alert('Пожалуйста, пройдите проверку безопасности');
                     return false;

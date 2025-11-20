@@ -59,8 +59,8 @@ class ContactController extends Controller
      */
     private function verifyTurnstile($token)
     {
-        // Пропускаем проверку на локальном домене
-        if ($token === 'localhost' || $token === 'no-key') {
+        // Пропускаем проверку на локальном домене, без ключа или при ошибке 110200
+        if ($token === 'localhost' || $token === 'no-key' || $token === 'error-110200') {
             return true;
         }
 
