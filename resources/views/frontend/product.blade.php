@@ -176,7 +176,7 @@
                         <!-- Описание -->
                         <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
                             @if($product->description)
-                                <p>{{ $product->description }}</p>
+                                <div class="product-description">{!! $product->description !!}</div>
                             @else
                                 <p class="text-muted">Описание товара отсутствует.</p>
                             @endif

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редактировать товар - GreenPlant</title>
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #333; }
@@ -105,7 +106,7 @@
 
                 <div class="form-group">
                     <label for="description">Полное описание</label>
-                    <textarea id="description" name="description" style="min-height: 200px;">{{ old('description', $product->description) }}</textarea>
+                    <textarea id="description" name="description" style="min-height: 200px;">{!! old('description', $product->description) !!}</textarea>
                     @error('description')<div class="error">{{ $message }}</div>@enderror
                 </div>
 
@@ -240,6 +241,37 @@
     </div>
 
     <script>
+        // Инициализация TinyMCE для поля "Полное описание"
+        document.addEventListener('DOMContentLoaded', function () {
+            tinymce.init({
+                selector: '#description',
+                height: 400,
+                menubar: 'file edit view insert format tools table help',
+                readonly: false,
+                promotion: false,
+                branding: false,
+                plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                    'anchor', 'searchreplace', 'visualblocks', 'visualchars', 'code', 'fullscreen',
+                    'insertdatetime', 'media', 'table', 'emoticons', 'codesample', 'help', 'wordcount',
+                    'pagebreak', 'nonbreaking', 'directionality', 'quickbars'
+                ],
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | ' +
+                         'forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | ' +
+                         'bullist numlist outdent indent | link image media table | ' +
+                         'code visualblocks visualchars codesample | emoticons charmap | ' +
+                         'searchreplace fullscreen preview | pagebreak nonbreaking anchor | ' +
+                         'insertdatetime | help',
+                toolbar_mode: 'sliding',
+                content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px }',
+                setup: function(editor) {
+                    editor.on('init', function() {
+                        console.log('TinyMCE initialized successfully for description');
+                    });
+                }
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
             const galleryInput = document.getElementById('gallery_images');
             const previewGrid = document.querySelector('[data-role="gallery-preview"]');
