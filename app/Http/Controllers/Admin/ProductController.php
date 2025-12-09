@@ -90,6 +90,10 @@ class ProductController extends Controller
 
         $validated['characteristics'] = $this->formatCharacteristics($request->input('characteristics', []));
 
+        // Обработка чекбоксов: если не отмечены, они не отправляются в запросе
+        $validated['is_active'] = $request->has('is_active') ? (bool)$request->input('is_active') : false;
+        $validated['is_featured'] = $request->has('is_featured') ? (bool)$request->input('is_featured') : false;
+
         Product::create($validated);
 
         return redirect()->route('admin.products.index')
@@ -201,6 +205,10 @@ class ProductController extends Controller
         unset($validated['gallery_images'], $validated['remove_images']);
 
         $validated['characteristics'] = $this->formatCharacteristics($request->input('characteristics', []));
+
+        // Обработка чекбоксов: если не отмечены, они не отправляются в запросе
+        $validated['is_active'] = $request->has('is_active') ? (bool)$request->input('is_active') : false;
+        $validated['is_featured'] = $request->has('is_featured') ? (bool)$request->input('is_featured') : false;
 
         $product->update($validated);
 
