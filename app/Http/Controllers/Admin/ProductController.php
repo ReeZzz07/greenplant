@@ -60,9 +60,19 @@ class ProductController extends Controller
             'delivery_description' => 'nullable|string',
         ]);
 
-        // Генерация slug если не указан
+        // Генерация уникального slug если не указан
         if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['name']);
+            $baseSlug = Str::slug($validated['name']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            // Проверяем уникальность slug и добавляем суффикс при необходимости
+            while (Product::where('slug', $slug)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $validated['slug'] = $slug;
         }
 
         // Загрузка изображения
@@ -145,9 +155,19 @@ class ProductController extends Controller
             'delivery_description' => 'nullable|string',
         ]);
 
-        // Генерация slug если не указан
+        // Генерация уникального slug если не указан (исключаем текущий товар)
         if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['name']);
+            $baseSlug = Str::slug($validated['name']);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            // Проверяем уникальность slug, исключая текущий товар
+            while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $validated['slug'] = $slug;
         }
 
         // Загрузка нового изображения
