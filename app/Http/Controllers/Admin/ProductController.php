@@ -52,8 +52,8 @@ class ProductController extends Controller
             'gallery_images.*' => 'image|max:5120',
             'stock' => 'nullable|integer|min:0',
             'sku' => 'nullable|string|unique:products,sku',
-            'is_active' => 'nullable',
-            'is_featured' => 'nullable',
+            'is_active' => 'boolean',
+            'is_featured' => 'boolean',
             'characteristics' => 'nullable|array',
             'characteristics.*.title' => 'nullable|string|max:255',
             'characteristics.*.value' => 'nullable|string|max:2000',
@@ -89,10 +89,6 @@ class ProductController extends Controller
         unset($validated['gallery_images']);
 
         $validated['characteristics'] = $this->formatCharacteristics($request->input('characteristics', []));
-
-        // Обработка чекбоксов: если не отмечены, они не отправляются в запросе
-        $validated['is_active'] = $request->filled('is_active');
-        $validated['is_featured'] = $request->filled('is_featured');
 
         Product::create($validated);
 
@@ -137,8 +133,8 @@ class ProductController extends Controller
             'remove_images.*' => 'string',
             'stock' => 'nullable|integer|min:0',
             'sku' => 'nullable|string|unique:products,sku,' . $product->id,
-            'is_active' => 'nullable',
-            'is_featured' => 'nullable',
+            'is_active' => 'boolean',
+            'is_featured' => 'boolean',
             'characteristics' => 'nullable|array',
             'characteristics.*.title' => 'nullable|string|max:255',
             'characteristics.*.value' => 'nullable|string|max:2000',
@@ -205,10 +201,6 @@ class ProductController extends Controller
         unset($validated['gallery_images'], $validated['remove_images']);
 
         $validated['characteristics'] = $this->formatCharacteristics($request->input('characteristics', []));
-
-        // Обработка чекбоксов: если не отмечены, они не отправляются в запросе
-        $validated['is_active'] = $request->filled('is_active');
-        $validated['is_featured'] = $request->filled('is_featured');
 
         $product->update($validated);
 

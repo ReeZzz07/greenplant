@@ -197,6 +197,7 @@
 
                 <div class="form-group">
                     <div class="checkbox-group">
+                        <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
                         <label for="is_active" style="margin: 0;">Товар активен (виден на сайте)</label>
                     </div>
@@ -204,6 +205,7 @@
 
                 <div class="form-group">
                     <div class="checkbox-group">
+                        <input type="hidden" name="is_featured" value="0">
                         <input type="checkbox" id="is_featured" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }}>
                         <label for="is_featured" style="margin: 0;">Отметить как "Хит продаж"</label>
                     </div>
