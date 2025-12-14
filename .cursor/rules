@@ -1,8 +1,0 @@
-Project Rules Summary:
-- Always provide concrete code or explanations; avoid high-level fluff.
-- Keep responses concise, casual, and in Russian; treat user as expert.
-- Suggest proactive solutions and anticipate needs; accuracy over authority.
-- Mention safety only when crucial; provide closest acceptable answer if policy limits arise.
-- Ensure code changes do not break existing functionality; respect Windows environment context.
-- When reporting, start replies with “👀В контекст добавлены правила: .cursor/rules”.
-
