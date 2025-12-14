@@ -3,8 +3,13 @@
 @section('title', 'Корзина - GreenPlant')
 
 @section('content')
-    <div class="hero-wrap hero-bread" style="background-image: url('{{ asset('assets/images/bg_6.jpg') }}'); background-size: cover; background-position: center;">
-        <div class="container">
+    <!-- Page Header -->
+    <div class="hero-wrap hero-bread" style="position: relative; overflow: hidden;">
+        <div class="hero-background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ $catalogSettings && $catalogSettings->background_image ? asset('storage/' . $catalogSettings->background_image) : asset('assets/images/bg_6.jpg') }}'); background-size: {{ $catalogSettings && $catalogSettings->background_size ? $catalogSettings->background_size : 'cover' }}; background-position: {{ $catalogSettings && $catalogSettings->background_position ? $catalogSettings->background_position : 'center center' }}; background-repeat: no-repeat; z-index: 0;"></div>
+        @if($catalogSettings && $catalogSettings->overlay_type !== 'none')
+            <div class="overlay-layer" style="background: @if($catalogSettings->overlay_type === 'darken') rgba(0, 0, 0, {{ $catalogSettings->overlay_opacity / 100 }}) @elseif($catalogSettings->overlay_type === 'lighten') rgba(255, 255, 255, {{ $catalogSettings->overlay_opacity / 100 }}) @endif; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0;"></div>
+        @endif
+        <div class="container" style="position: relative; z-index: 1;">
             <div class="row no-gutters slider-text align-items-center justify-content-center" style="height: 300px;">
                 <div class="col-md-9 ftco-animate text-center">
                     <h1 class="mb-0 bread">Корзина покупок</h1>
@@ -90,26 +95,15 @@
                             <span>Товары</span>
                             <span>{{ number_format($total, 0, ',', ' ') }} ₽</span>
                         </p>
-                        <p class="d-flex">
-                            <span>Доставка</span>
-                            <span>
-                                @if($total >= (\App\Models\Setting::get('free_delivery_from', 10000)))
-                                    Бесплатно
-                                @else
-                                    500 ₽
-                                @endif
-                            </span>
-                        </p>
+                        <div style="background: #fff3cd; padding: 12px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ffc107;">
+                            <p class="mb-0" style="font-size: 13px; color: #856404; margin: 0;">
+                                <strong>Доставка:</strong> Стоимость доставки рассчитывается менеджером, при подтверждении заказа!
+                            </p>
+                        </div>
                         <hr>
                         <p class="d-flex total-price">
-                            <span>Итого</span>
-                            <span>
-                                @if($total >= (\App\Models\Setting::get('free_delivery_from', 10000)))
-                                    {{ number_format($total, 0, ',', ' ') }} ₽
-                                @else
-                                    {{ number_format($total + 500, 0, ',', ' ') }} ₽
-                                @endif
-                            </span>
+                            <span><strong>Итого</strong></span>
+                            <span><strong>{{ number_format($total, 0, ',', ' ') }} ₽</strong></span>
                         </p>
                     </div>
                     <p class="text-center">
@@ -185,17 +179,8 @@ $(document).ready(function() {
                 // Обновляем итоговые суммы
                 $('.cart-total p:contains("Товары") span:last').text(totalCart.toLocaleString('ru-RU') + ' ₽');
                 
-                // Обновляем итоговую сумму с доставкой
-                const freeDeliveryFrom = {{ \App\Models\Setting::get('free_delivery_from', 10000) }};
-                const deliveryCost = totalCart >= freeDeliveryFrom ? 0 : 500;
-                const finalTotal = totalCart + deliveryCost;
-                
-                $('.total-price span:last').text(finalTotal.toLocaleString('ru-RU') + ' ₽');
-                
-                // Обновляем стоимость доставки
-                $('.cart-total p:contains("Доставка") span:last').text(
-                    deliveryCost === 0 ? 'Бесплатно' : '500 ₽'
-                );
+                // Обновляем итоговую сумму (без доставки)
+                $('.total-price span:last').text(totalCart.toLocaleString('ru-RU') + ' ₽');
                 
                 // Гарантированно разблокируем поле ввода
                 $input.prop('disabled', false);

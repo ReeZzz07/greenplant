@@ -98,6 +98,10 @@ class SettingController extends Controller
             return 'integrations';
         }
         
+        if (strpos($key, 'payment_method') !== false || strpos($key, 'delivery') !== false || strpos($key, 'free_delivery') !== false) {
+            return 'delivery';
+        }
+        
         // Определяем группу по существующей настройке
         $existing = Setting::where('key', $key)->first();
         if ($existing && $existing->group) {

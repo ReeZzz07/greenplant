@@ -3,8 +3,64 @@
 @section('title', 'Оформление заказа - GreenPlant')
 
 @section('content')
-    <div class="hero-wrap hero-bread" style="background-image: url('{{ asset('assets/images/bg_6.jpg') }}'); background-size: cover; background-position: center;">
-        <div class="container">
+    <style>
+        .billing-form .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .billing-form .form-control {
+            color: #333 !important;
+            font-size: 16px !important;
+            font-weight: 400 !important;
+            padding: 12px 15px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 6px !important;
+            background-color: #fff !important;
+        }
+        
+        .billing-form .form-control:focus {
+            border-color: #82ae46 !important;
+            box-shadow: 0 0 0 0.2rem rgba(130, 174, 70, 0.15) !important;
+            outline: none !important;
+        }
+        
+        .billing-form textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.5;
+        }
+        
+        .billing-form select.form-control {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+            background-position: right 12px center !important;
+            background-repeat: no-repeat !important;
+            background-size: 16px !important;
+            padding-right: 40px !important;
+        }
+        
+        .billing-form h3 {
+            font-weight: 700;
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        
+        .billing-form .select-wrap {
+            position: relative;
+        }
+    </style>
+    <!-- Page Header -->
+    <div class="hero-wrap hero-bread" style="position: relative; overflow: hidden;">
+        <div class="hero-background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ $catalogSettings && $catalogSettings->background_image ? asset('storage/' . $catalogSettings->background_image) : asset('assets/images/bg_6.jpg') }}'); background-size: {{ $catalogSettings && $catalogSettings->background_size ? $catalogSettings->background_size : 'cover' }}; background-position: {{ $catalogSettings && $catalogSettings->background_position ? $catalogSettings->background_position : 'center center' }}; background-repeat: no-repeat; z-index: 0;"></div>
+        @if($catalogSettings && $catalogSettings->overlay_type !== 'none')
+            <div class="overlay-layer" style="background: @if($catalogSettings->overlay_type === 'darken') rgba(0, 0, 0, {{ $catalogSettings->overlay_opacity / 100 }}) @elseif($catalogSettings->overlay_type === 'lighten') rgba(255, 255, 255, {{ $catalogSettings->overlay_opacity / 100 }}) @endif; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0;"></div>
+        @endif
+        <div class="container" style="position: relative; z-index: 1;">
             <div class="row no-gutters slider-text align-items-center justify-content-center" style="height: 300px;">
                 <div class="col-md-9 ftco-animate text-center">
                     <h1 class="mb-0 bread">Оформление заказа</h1>
@@ -138,12 +194,16 @@
                             <div class="form-group">
                                 <div class="select-wrap">
                                     <select name="payment_method" class="form-control" required>
-                                        <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Наличными при получении</option>
-                                        <option value="card" {{ old('payment_method') == 'card' ? 'selected' : '' }}>Картой при получении</option>
-                                        {{-- Будет доступно позже --}}
-                                        {{-- <option value="online" {{ old('payment_method') == 'online' ? 'selected' : '' }}>Онлайн оплата</option> --}}
+                                        @forelse($paymentMethods as $method)
+                                            <option value="{{ $method['value'] }}" {{ old('payment_method') == $method['value'] ? 'selected' : '' }}>{{ $method['label'] }}</option>
+                                        @empty
+                                            <option value="">Нет доступных способов оплаты</option>
+                                        @endforelse
                                     </select>
                                 </div>
+                                @if($paymentMethodsText)
+                                    <small style="color: #666; display: block; margin-top: 8px;">{!! $paymentMethodsText !!}</small>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -164,21 +224,16 @@
                                         <span>Товары</span>
                                         <span>{{ number_format($total, 0, ',', ' ') }} ₽</span>
                                     </p>
-                                    <p class="d-flex">
-                                        <span>Доставка</span>
-                                        <span>{{ $deliveryCost > 0 ? number_format($deliveryCost, 0, ',', ' ') . ' ₽' : 'Бесплатно' }}</span>
-                                    </p>
+                                    <div style="background: #fff3cd; padding: 12px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ffc107;">
+                                        <p class="mb-0" style="font-size: 13px; color: #856404; margin: 0;">
+                                            <strong>Доставка:</strong> Стоимость доставки рассчитывается менеджером, при подтверждении заказа!
+                                        </p>
+                                    </div>
                                     <hr>
                                     <p class="d-flex total-price">
                                         <span><strong>Итого</strong></span>
-                                        <span><strong>{{ number_format($total + $deliveryCost, 0, ',', ' ') }} ₽</strong></span>
+                                        <span><strong>{{ number_format($total, 0, ',', ' ') }} ₽</strong></span>
                                     </p>
-
-                                    @if($total < \App\Models\Setting::get('free_delivery_from', 10000))
-                                    <div style="background: #fff3cd; padding: 10px; border-radius: 8px; margin-top: 15px; font-size: 13px; color: #856404;">
-                                        Добавьте товаров еще на {{ number_format(\App\Models\Setting::get('free_delivery_from', 10000) - $total, 0, ',', ' ') }} ₽ для бесплатной доставки
-                                    </div>
-                                    @endif
 
                                     <p class="mt-4">
                                         <button type="submit" class="btn btn-primary py-3 px-4" style="width: 100%;">Оформить заказ</button>

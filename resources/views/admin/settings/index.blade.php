@@ -102,7 +102,7 @@
             <div class="tabs-header">
                 <button class="tab-button active" data-tab="homepage">🏠 Главная страница</button>
                 <button class="tab-button" data-tab="general">⚙️ Основные</button>
-                <button class="tab-button" data-tab="delivery">🚚 Доставка</button>
+                <button class="tab-button" data-tab="delivery">💳 Оплата и доставка</button>
                 <button class="tab-button" data-tab="integrations">🔗 Интеграции</button>
                 <button class="tab-button" data-tab="legal">⚖️ Юридическое</button>
                 <button class="tab-button" data-tab="catalog">📦 Каталог</button>
@@ -389,9 +389,46 @@
                     @endforelse
                 </div>
 
-                <!-- Tab: Доставка -->
+                <!-- Tab: Оплата и доставка -->
                 <div class="tab-content" id="tab-delivery">
-                    <h3 class="section-title">🚚 Настройки доставки</h3>
+                    <h3 class="section-title">💳 Способы оплаты</h3>
+                    @php
+                        $paymentMethodsJson = \App\Models\Setting::get('payment_methods_json', '[]');
+                        $paymentMethods = json_decode($paymentMethodsJson, true) ?: [];
+                        $paymentMethodsText = \App\Models\Setting::get('payment_methods_text', '');
+                    @endphp
+                    
+                    <div class="form-group">
+                        <label>Доступные способы оплаты</label>
+                        <div id="payment-methods-list" style="margin-bottom: 15px;">
+                            @foreach($paymentMethods as $methodIndex => $method)
+                                <div class="payment-method-item" data-index="{{ $methodIndex }}" style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                    <div style="flex: 1;">
+                                        <input type="text" class="payment-method-value" placeholder="Значение (например: bank_transfer)" value="{{ $method['value'] ?? '' }}" style="width: 100%; margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                                        <input type="text" class="payment-method-label" placeholder="Название (например: Банковский перевод)" value="{{ $method['label'] ?? '' }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                                    </div>
+                                    <button type="button" class="remove-payment-method" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Удалить</button>
+                                </div>
+                            @endforeach
+                        </div>
+                        <button type="button" id="add-payment-method" style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">+ Добавить способ оплаты</button>
+                        <input type="hidden" name="settings[{{ $index }}][key]" value="payment_methods_json" id="payment_methods_json_key">
+                        <input type="hidden" name="settings[{{ $index }}][value]" value="{{ $paymentMethodsJson }}" id="payment_methods_json_value">
+                        <small style="color: #666; display: block; margin-top: 10px;">Добавьте способы оплаты, которые будут доступны при оформлении заказа. Значение используется в системе, название отображается пользователю.</small>
+                        @php $index++; @endphp
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment_methods_text">Дополнительная информация о способах оплаты</label>
+                        <textarea id="payment_methods_text" name="settings[{{ $index }}][value]" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">{{ $paymentMethodsText }}</textarea>
+                        <input type="hidden" name="settings[{{ $index }}][key]" value="payment_methods_text">
+                        <small style="color: #666;">Текст будет отображаться на странице оформления заказа под выбором способа оплаты</small>
+                        @php $index++; @endphp
+                    </div>
+                    
+                    <hr style="margin: 30px 0; border: none; border-top: 2px solid #e9ecef;">
+                    
+                    <h3 class="section-title" style="margin-top: 30px;">🚚 Настройки доставки</h3>
                     @forelse($settings['delivery'] ?? [] as $setting)
                     <div class="form-group">
                         <label for="{{ $setting->key }}">
@@ -715,8 +752,68 @@
             });
         });
 
+        // Управление способами оплаты
+        function updatePaymentMethodsJson() {
+            const items = document.querySelectorAll('.payment-method-item');
+            const methods = [];
+            items.forEach(item => {
+                const value = item.querySelector('.payment-method-value').value.trim();
+                const label = item.querySelector('.payment-method-label').value.trim();
+                if (value && label) {
+                    methods.push({ value: value, label: label });
+                }
+            });
+            document.getElementById('payment_methods_json_value').value = JSON.stringify(methods);
+        }
+
         // Инициализация TinyMCE для полей политики и соглашения
         document.addEventListener('DOMContentLoaded', function() {
+            // Добавление способа оплаты
+            const addPaymentMethodBtn = document.getElementById('add-payment-method');
+            if (addPaymentMethodBtn) {
+                addPaymentMethodBtn.addEventListener('click', function() {
+                    const list = document.getElementById('payment-methods-list');
+                    const index = list.children.length;
+                    const newItem = document.createElement('div');
+                    newItem.className = 'payment-method-item';
+                    newItem.setAttribute('data-index', index);
+                    newItem.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px;';
+                    newItem.innerHTML = `
+                        <div style="flex: 1;">
+                            <input type="text" class="payment-method-value" placeholder="Значение (например: bank_transfer)" style="width: 100%; margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                            <input type="text" class="payment-method-label" placeholder="Название (например: Банковский перевод)" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <button type="button" class="remove-payment-method" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Удалить</button>
+                    `;
+                    
+                    // Добавляем обработчики событий
+                    newItem.querySelector('.payment-method-value').addEventListener('input', updatePaymentMethodsJson);
+                    newItem.querySelector('.payment-method-label').addEventListener('input', updatePaymentMethodsJson);
+                    newItem.querySelector('.remove-payment-method').addEventListener('click', function() {
+                        newItem.remove();
+                        updatePaymentMethodsJson();
+                    });
+                    
+                    list.appendChild(newItem);
+                    updatePaymentMethodsJson();
+                });
+            }
+
+            // Удаление способа оплаты
+            document.querySelectorAll('.remove-payment-method').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.payment-method-item').remove();
+                    updatePaymentMethodsJson();
+                });
+            });
+
+            // Обновление JSON при изменении существующих полей
+            document.querySelectorAll('.payment-method-value, .payment-method-label').forEach(input => {
+                input.addEventListener('input', updatePaymentMethodsJson);
+            });
+
+            // Инициализация JSON при загрузке страницы
+            updatePaymentMethodsJson();
             // Функция для инициализации TinyMCE редактора
             function initTinyMCE(selector) {
                 // Проверяем, что элемент существует и еще не инициализирован

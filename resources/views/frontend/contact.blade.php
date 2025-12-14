@@ -3,6 +3,46 @@
 @section('title', 'Контакты - GreenPlant')
 
 @section('content')
+    <style>
+        .contact-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .contact-form .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .contact-form .form-control {
+            color: #333 !important;
+            font-size: 16px !important;
+            font-weight: 400 !important;
+            padding: 12px 15px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 6px !important;
+            background-color: #fff !important;
+        }
+        
+        .contact-form .form-control:focus {
+            border-color: #82ae46 !important;
+            box-shadow: 0 0 0 0.2rem rgba(130, 174, 70, 0.15) !important;
+            outline: none !important;
+        }
+        
+        .contact-form .form-control::placeholder {
+            color: #999;
+            opacity: 1;
+        }
+        
+        .contact-form textarea.form-control {
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.5;
+        }
+    </style>
     <div class="hero-wrap hero-bread" style="position: relative; overflow: hidden;">
         <div class="hero-background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('{{ $contactSettings && $contactSettings->background_image ? asset('storage/' . $contactSettings->background_image) : asset('assets/images/bg_6.jpg') }}'); background-size: {{ $contactSettings && $contactSettings->background_size ? $contactSettings->background_size : 'cover' }}; background-position: {{ $contactSettings && $contactSettings->background_position ? $contactSettings->background_position : 'center center' }}; background-repeat: no-repeat; z-index: 0;"></div>
         @if($contactSettings && $contactSettings->overlay_type !== 'none')

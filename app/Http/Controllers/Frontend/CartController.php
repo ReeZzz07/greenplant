@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\CatalogPageSetting;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -20,7 +21,10 @@ class CartController extends Controller
             $total += $item['price'] * $item['quantity'];
         }
         
-        return view('frontend.cart', compact('cart', 'total'));
+        // Получаем настройки страницы каталога для hero-секции
+        $catalogSettings = CatalogPageSetting::getActive();
+        
+        return view('frontend.cart', compact('cart', 'total', 'catalogSettings'));
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\CatalogPageSetting;
 use App\Notifications\NewOrderNotification;
 use App\Notifications\OrderConfirmationNotification;
 use Illuminate\Http\Request;
@@ -37,7 +38,15 @@ class CheckoutController extends Controller
         $addresses = auth()->check() ? auth()->user()->addresses : collect();
         $defaultAddress = auth()->check() ? auth()->user()->defaultAddress : null;
         
-        return view('frontend.checkout', compact('cart', 'total', 'deliveryCost', 'addresses', 'defaultAddress'));
+        // Получаем настройки страницы каталога для hero-секции
+        $catalogSettings = CatalogPageSetting::getActive();
+        
+        // Получаем способы оплаты из настроек
+        $paymentMethodsJson = \App\Models\Setting::get('payment_methods_json', '[]');
+        $paymentMethods = json_decode($paymentMethodsJson, true) ?: [];
+        $paymentMethodsText = \App\Models\Setting::get('payment_methods_text', '');
+        
+        return view('frontend.checkout', compact('cart', 'total', 'deliveryCost', 'addresses', 'defaultAddress', 'catalogSettings', 'paymentMethods', 'paymentMethodsText'));
     }
 
     /**
@@ -45,13 +54,22 @@ class CheckoutController extends Controller
      */
     public function store(Request $request)
     {
+        // Получаем доступные способы оплаты
+        $paymentMethodsJson = \App\Models\Setting::get('payment_methods_json', '[]');
+        $paymentMethods = json_decode($paymentMethodsJson, true) ?: [];
+        $allowedPaymentMethods = array_column($paymentMethods, 'value');
+        
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email|max:255',
             'customer_phone' => 'required|string|max:20',
             'customer_address' => 'required|string',
             'customer_comment' => 'nullable|string',
-            'payment_method' => 'required|in:cash,card,online',
+            'payment_method' => ['required', 'string', function ($attribute, $value, $fail) use ($allowedPaymentMethods) {
+                if (!empty($allowedPaymentMethods) && !in_array($value, $allowedPaymentMethods)) {
+                    $fail('Выбран недопустимый способ оплаты.');
+                }
+            }],
             'delivery_method' => 'required|in:delivery,pickup',
         ], [
             'customer_name.required' => 'Укажите ваше имя',
