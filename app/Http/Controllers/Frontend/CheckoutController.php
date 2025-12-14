@@ -177,4 +177,3 @@ class CheckoutController extends Controller
         return view('frontend.order-success', compact('order'));
     }
 }
-

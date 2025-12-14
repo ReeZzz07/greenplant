@@ -232,7 +232,7 @@
                                     <hr>
                                     <p class="d-flex total-price">
                                         <span><strong>Итого</strong></span>
-                                        <span><strong>{{ number_format($total, 0, ',', ' ') }} ₽</strong></span>
+                                        <span><strong style="color: #82ae46;">{{ number_format($total, 0, ',', ' ') }} ₽</strong></span>
                                     </p>
 
                                     <p class="mt-4">
