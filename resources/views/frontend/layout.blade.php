@@ -20,7 +20,14 @@
         ];
         $faviconType = $faviconTypeMap[$faviconExt] ?? 'image/png';
         $logoUrl = $siteLogo ? asset('storage/' . $siteLogo) : null;
-        $ogImageUrl = $siteOgImage ? asset('storage/' . $siteOgImage) : (asset('assets/images/bg_1.png'));
+        // Используем og_image, если он есть, иначе logo, если он есть
+        if ($siteOgImage) {
+            $ogImageUrl = url('storage/' . $siteOgImage);
+        } elseif ($siteLogo) {
+            $ogImageUrl = url('storage/' . $siteLogo);
+        } else {
+            $ogImageUrl = null;
+        }
     @endphp
     <!-- Yandex Metrika Code -->
     @php($yandexMetrikaCode = \App\Models\Setting::get('yandex_metrika_id'))
@@ -45,7 +52,14 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('og_title', $siteName . ' - Продажа саженцев и деревьев туи')">
     <meta property="og:description" content="@yield('og_description', $siteDescription)">
+    @if($ogImageUrl)
     <meta property="og:image" content="@yield('og_image', $ogImageUrl)">
+    @if($siteOgImage)
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    @endif
+    @endif
     <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:locale" content="ru_RU">
     
@@ -54,7 +68,9 @@
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="@yield('og_title', $siteName . ' - Продажа саженцев и деревьев туи')">
     <meta property="twitter:description" content="@yield('og_description', $siteDescription)">
+    @if($ogImageUrl)
     <meta property="twitter:image" content="@yield('og_image', $ogImageUrl)">
+    @endif
     
     <link rel="canonical" href="{{ url()->current() }}">
     
