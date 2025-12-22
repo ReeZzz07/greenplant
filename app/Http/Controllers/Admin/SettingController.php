@@ -29,8 +29,10 @@ class SettingController extends Controller
             'settings.*.value' => 'nullable|string',
             'site_favicon' => 'nullable|file|mimes:png,jpg,jpeg,svg,ico|max:2048',
             'site_logo' => 'nullable|file|mimes:png,jpg,jpeg,svg|max:4096',
+            'site_og_image' => 'nullable|file|mimes:png,jpg,jpeg|max:5120',
             'remove_site_favicon' => 'nullable|boolean',
             'remove_site_logo' => 'nullable|boolean',
+            'remove_site_og_image' => 'nullable|boolean',
         ]);
 
         foreach ($validated['settings'] as $setting) {
@@ -71,6 +73,20 @@ class SettingController extends Controller
                 Storage::disk('public')->delete($currentLogo);
             }
             Setting::set('site_logo', null, 'file', 'general');
+        }
+
+        $currentOgImage = Setting::get('site_og_image');
+        if ($request->hasFile('site_og_image')) {
+            if ($currentOgImage) {
+                Storage::disk('public')->delete($currentOgImage);
+            }
+            $path = $request->file('site_og_image')->store('settings', 'public');
+            Setting::set('site_og_image', $path, 'file', 'general');
+        } elseif ($request->boolean('remove_site_og_image')) {
+            if ($currentOgImage) {
+                Storage::disk('public')->delete($currentOgImage);
+            }
+            Setting::set('site_og_image', null, 'file', 'general');
         }
 
         return redirect()->route('admin.settings.index')

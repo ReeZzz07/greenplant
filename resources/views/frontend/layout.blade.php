@@ -8,6 +8,7 @@
         $siteAuthor = \App\Models\Setting::get('site_author', 'GreenPlant');
         $siteFavicon = \App\Models\Setting::get('site_favicon');
         $siteLogo = \App\Models\Setting::get('site_logo');
+        $siteOgImage = \App\Models\Setting::get('site_og_image');
         $faviconUrl = $siteFavicon ? asset('storage/' . $siteFavicon) : asset('assets/images/prod-1.png');
         $faviconExt = $siteFavicon ? strtolower(pathinfo($siteFavicon, PATHINFO_EXTENSION)) : 'png';
         $faviconTypeMap = [
@@ -19,6 +20,7 @@
         ];
         $faviconType = $faviconTypeMap[$faviconExt] ?? 'image/png';
         $logoUrl = $siteLogo ? asset('storage/' . $siteLogo) : null;
+        $ogImageUrl = $siteOgImage ? asset('storage/' . $siteOgImage) : (asset('assets/images/bg_1.png'));
     @endphp
     <!-- Yandex Metrika Code -->
     @php($yandexMetrikaCode = \App\Models\Setting::get('yandex_metrika_id'))
@@ -43,7 +45,7 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('og_title', $siteName . ' - Продажа саженцев и деревьев туи')">
     <meta property="og:description" content="@yield('og_description', $siteDescription)">
-    <meta property="og:image" content="@yield('og_image', asset('assets/images/bg_1.png'))">
+    <meta property="og:image" content="@yield('og_image', $ogImageUrl)">
     <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:locale" content="ru_RU">
     
@@ -52,7 +54,7 @@
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="@yield('og_title', $siteName . ' - Продажа саженцев и деревьев туи')">
     <meta property="twitter:description" content="@yield('og_description', $siteDescription)">
-    <meta property="twitter:image" content="@yield('og_image', asset('assets/images/bg_1.png'))">
+    <meta property="twitter:image" content="@yield('og_image', $ogImageUrl)">
     
     <link rel="canonical" href="{{ url()->current() }}">
     

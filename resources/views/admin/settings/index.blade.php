@@ -250,7 +250,7 @@
                 <div class="tab-content" id="tab-general">
                     <h3 class="section-title">🏠 Основные настройки сайта</h3>
                     @forelse($settings['general'] ?? [] as $setting)
-                    @continue(in_array($setting->key, ['site_favicon', 'site_logo']))
+                    @continue(in_array($setting->key, ['site_favicon', 'site_logo', 'site_og_image']))
                     <div class="form-group">
                         <label for="{{ $setting->key }}">
                             @if($setting->key == 'site_name') Название сайта
@@ -319,6 +319,31 @@
                             <label class="remove-checkbox">
                                 <input type="checkbox" name="remove_site_logo" value="1">
                                 Удалить текущий логотип
+                            </label>
+                        @endif
+                    </div>
+
+                    @php
+                        $siteOgImage = \App\Models\Setting::get('site_og_image');
+                    @endphp
+                    <div class="form-group">
+                        <label for="site_og_image">Изображение для соцсетей (Open Graph)</label>
+                        <div class="help-text" style="margin-bottom: 10px;">Изображение, которое отображается при отправке ссылки на сайт в мессенджерах и соцсетях (Telegram, WhatsApp, Facebook и т.д.)</div>
+                        @if($siteOgImage)
+                            <div class="image-preview-card">
+                                <img src="{{ asset('storage/' . $siteOgImage) }}" alt="Текущее изображение для соцсетей" style="max-width: 200px;">
+                                <div>
+                                    <div style="font-weight: 600; color: #2f3367;">Текущий файл</div>
+                                    <div class="help-text">{{ $siteOgImage }}</div>
+                                </div>
+                            </div>
+                        @endif
+                        <input type="file" id="site_og_image" name="site_og_image" accept=".png,.jpg,.jpeg">
+                        <div class="help-text">PNG / JPG, до 5 МБ. Рекомендуемый размер: 1200×630 пикселей (соотношение 1.91:1).</div>
+                        @if($siteOgImage)
+                            <label class="remove-checkbox">
+                                <input type="checkbox" name="remove_site_og_image" value="1">
+                                Удалить текущее изображение
                             </label>
                         @endif
                     </div>
